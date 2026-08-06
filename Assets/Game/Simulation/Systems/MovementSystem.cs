@@ -3,7 +3,7 @@ using UnityEngine;
 
 public sealed class MovementSystem : ISystem {
     private const float StopRange = 0.1f;
-    
+
     public void Run(Simulation s, Frame fr) {
         var dt = s.TickDeltaTime;
         var sortedIds = new List<int>(fr.Units.Keys);
@@ -21,11 +21,9 @@ public sealed class MovementSystem : ISystem {
             var id = sortedIds[i];
             var state = fr.Units[id];
             var config = s.ConfigDatabase.GetUnitConfig(state.ConfigId);
-            var desired = state.Position;
 
-            if (state.GetTargetPositionAndTeam(fr, out var targetPosition, out _)) {
-                desired = CalculateDesiredPosition(state.Position, targetPosition, config.Speed, dt, StopRange);
-            }
+            var targetPosition = fr.GetEnemyBasePosition(state);
+            var desired = CalculateDesiredPosition(state.Position, targetPosition, config.Speed, dt, StopRange);
 
             if (CanMoveTo(fr, state.Position, desired, id, state.Size, sortedIds, startPositions, resolvedPositions)) {
                 state.Position = desired;
@@ -43,7 +41,8 @@ public sealed class MovementSystem : ISystem {
         float unitSize,
         List<int> sortedIds,
         Dictionary<int, Vector2> startPositions,
-        Dictionary<int, Vector2> resolvedPositions) {
+        Dictionary<int, Vector2> resolvedPositions
+    ) {
         var movementDirection = desiredPosition - currentPosition;
         var hasMovement = movementDirection.sqrMagnitude > 0.000001f;
         var radius = unitSize * 0.5f;
@@ -75,7 +74,9 @@ public sealed class MovementSystem : ISystem {
         return true;
     }
 
-    private static Vector2 CalculateDesiredPosition(Vector2 origin, Vector2 destination, float speed, float dt, float stopRange) {
+    private static Vector2 CalculateDesiredPosition(
+        Vector2 origin, Vector2 destination, float speed, float dt, float stopRange
+    ) {
         var delta = destination - origin;
         var distance = delta.magnitude;
 

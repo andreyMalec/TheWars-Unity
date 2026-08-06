@@ -1,9 +1,9 @@
 using UnityEngine;
 
 public static class TargetingUtility {
-    public static int FindNearestEnemy(Frame frame, int team, Vector2 origin) {
+    public static bool FindNearestEnemy(Frame frame, int team, Vector2 origin, out Damageable damageable) {
         var bestDistanceSqr = float.MaxValue;
-        var bestId = 0;
+        Damageable best = null;
 
         foreach (var pair in frame.Units) {
             var unit = pair.Value;
@@ -14,7 +14,7 @@ public static class TargetingUtility {
             var distanceSqr = (unit.Position - origin).sqrMagnitude;
             if (distanceSqr < bestDistanceSqr) {
                 bestDistanceSqr = distanceSqr;
-                bestId = unit.Id;
+                best = unit;
             }
         }
 
@@ -27,10 +27,39 @@ public static class TargetingUtility {
             var distanceSqr = (baseState.Position - origin).sqrMagnitude;
             if (distanceSqr < bestDistanceSqr) {
                 bestDistanceSqr = distanceSqr;
-                bestId = baseState.Id;
+                best = baseState;
             }
         }
 
-        return bestId;
+        damageable = best;
+        return best != null;
+    }
+
+    public static bool FindEnemyInDirection(
+        Frame frame, int team, Vector2 origin, Vector2 direction, out Damageable damageable
+    ) {
+        var bestDistanceSqr = float.MaxValue;
+        Damageable best = null;
+ 
+        foreach (var pair in frame.Units) {
+            var unit = pair.Value;
+            if (unit.Team == team || unit.Health <= 0) {
+                continue;
+            }
+
+            var distanceSqr = (unit.Position - origin).sqrMagnitude;
+            if (distanceSqr < bestDistanceSqr) {
+                var toOther = unit.Position - origin;
+                if (Vector2.Dot(direction, toOther) <= 0f) {
+                    continue;
+                }
+                
+                bestDistanceSqr = distanceSqr;
+                best = unit;
+            }
+        }
+
+        damageable = best;
+        return best != null;
     }
 }

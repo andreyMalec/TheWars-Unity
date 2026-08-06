@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0ab2196dc34122b9f9a3fe5e9bd161, type: 3}
   m_Name: Ranged Unit
   m_EditorClassIdentifier: TheWars.Simulation::UnitConfig
+  type: 1
   Cost: 20
   MaxHealth: 50
   Size: 0.2
   Speed: 1
-  AttackRange: 5
-  AttackInterval: 1
-  ProjectileSpeed: 3
   Damage: 40
+  AttackInterval: 1
+  AttackRange: 5
+  ProjectileSpeed: 3

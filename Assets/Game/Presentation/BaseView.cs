@@ -14,6 +14,6 @@ public sealed class BaseView : MonoBehaviour {
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(transform.position + Vector3.up * 0.25f, new Vector3(0.1f, 1f, 1f));
+        Gizmos.DrawWireCube(transform.position + Vector3.up *0.5f, new Vector3(0.1f, 2f, 1f));
     }
 }

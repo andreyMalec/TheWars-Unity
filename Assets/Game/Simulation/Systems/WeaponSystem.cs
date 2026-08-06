@@ -26,7 +26,8 @@ public sealed class WeaponSystem : ISystem {
             }
 
             if (config.type == UnitAttackType.Ranged) {
-                SpawnProjectile(fr, unit.Team, unit.Id, unit.TargetEntityId, unit.Position, config.Damage,
+                var direction = (targetPosition - unit.Position).normalized;
+                SpawnProjectile(fr, unit.Team, unit.Id, unit.TargetEntityId, unit.Position, direction, config.Damage,
                     config.ProjectileSpeed);
             } else {
                 s.DamageRequests.Enqueue(new DamageRequest {
@@ -60,7 +61,9 @@ public sealed class WeaponSystem : ISystem {
                 continue;
             }
 
-            SpawnProjectile(fr, turret.Team, turret.Id, turret.TargetEntityId, turret.Position, config.Damage,
+            var direction = (targetPosition - turret.Position).normalized;
+            SpawnProjectile(fr, turret.Team, turret.Id, turret.TargetEntityId, turret.Position, direction,
+                config.Damage,
                 config.ProjectileSpeed);
             turret.Cooldown = config.AttackInterval > 0f ? config.AttackInterval : 1f;
         }
@@ -72,6 +75,7 @@ public sealed class WeaponSystem : ISystem {
         int sourceEntityId,
         int targetEntityId,
         Vector2 position,
+        Vector2 direction,
         int damage,
         float speed
     ) {
@@ -82,8 +86,8 @@ public sealed class WeaponSystem : ISystem {
             TargetEntityId = targetEntityId,
             Damage = damage,
             Position = position,
-            Direction = Vector2.right,
-            Speed = speed > 0f ? speed : 8f,
+            Direction = direction,
+            Speed = speed,
             Lifetime = 5f
         };
 

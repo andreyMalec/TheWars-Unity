@@ -114,7 +114,7 @@ public sealed class FramePresenter : MonoBehaviour {
         return newView;
     }
 
-    private void CleanupMissing<TView, TState>(Dictionary<int, TView> views, Dictionary<int, TState> source)
+    private void CleanupMissing<TView, TState>(Dictionary<int, TView> views, IReadOnlyDictionary<int, TState> source)
         where TView : MonoBehaviour {
         _removeBuffer.Clear();
         foreach (var pair in views) {
