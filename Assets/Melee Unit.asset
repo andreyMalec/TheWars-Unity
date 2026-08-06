@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e0ab2196dc34122b9f9a3fe5e9bd161, type: 3}
-  m_Name: New Unit Config
+  m_Name: Melee Unit
   m_EditorClassIdentifier: TheWars.Simulation::UnitConfig
-  ConfigId: 0
   Cost: 10
   MaxHealth: 100
-  Size: 0.2
+  Size: 1
   Speed: 1
-  AttackRange: 3
+  AttackRange: 1
   AttackInterval: 1
   ProjectileSpeed: 3
   Damage: 60

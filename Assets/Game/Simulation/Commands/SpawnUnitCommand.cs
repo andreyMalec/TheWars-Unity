@@ -3,16 +3,16 @@ using UnityEngine;
 public sealed class SpawnUnitCommand : ICommand
 {
     private readonly int _team;
-    private readonly int _unitConfigId;
+    private readonly ConfigId _unitConfigId;
     private readonly Vector2 _position;
     private readonly Vector2 _destination;
 
-    public SpawnUnitCommand(int team, int unitConfigId, Vector2 position)
+    public SpawnUnitCommand(int team, ConfigId unitConfigId, Vector2 position)
         : this(team, unitConfigId, position, position)
     {
     }
 
-    public SpawnUnitCommand(int team, int unitConfigId, Vector2 position, Vector2 destination)
+    public SpawnUnitCommand(int team, ConfigId unitConfigId, Vector2 position, Vector2 destination)
     {
         _team = team;
         _unitConfigId = unitConfigId;

@@ -33,12 +33,8 @@ public sealed class DamageSystem : ISystem {
 
             if (world.TryFindUnit(request.TargetEntityId, out var unit)) {
                 unit.Health -= request.Amount;
-                Debug.Log($"[DamageSystem] Unit (Team {unit.Team}, Config {unit.ConfigId}) took {request.Amount} damage. Remaining health: {unit.Health}");
-                continue;
-            }
-
-            if (world.TryFindTurret(request.TargetEntityId, out var turret)) {
-                turret.Health -= request.Amount;
+                Debug.Log(
+                    $"[DamageSystem] Unit (Team {unit.Team}, Config {unit.ConfigId}) took {request.Amount} damage. Remaining health: {unit.Health}");
                 continue;
             }
 

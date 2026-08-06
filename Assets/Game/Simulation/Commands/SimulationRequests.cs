@@ -3,7 +3,7 @@ using UnityEngine;
 public struct SpawnUnitRequest
 {
     public int Team;
-    public int UnitConfigId;
+    public ConfigId UnitConfigId;
     public Vector2 Position;
     public Vector2 Destination;
 }
@@ -11,7 +11,7 @@ public struct SpawnUnitRequest
 public struct BuildTurretRequest
 {
     public int Team;
-    public int TurretConfigId;
+    public ConfigId TurretConfigId;
     public Vector2 Position;
 }
 

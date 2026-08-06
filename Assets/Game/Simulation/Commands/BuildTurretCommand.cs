@@ -3,10 +3,10 @@ using UnityEngine;
 public sealed class BuildTurretCommand : ICommand
 {
     private readonly int _team;
-    private readonly int _turretConfigId;
+    private readonly ConfigId _turretConfigId;
     private readonly Vector2 _position;
 
-    public BuildTurretCommand(int team, int turretConfigId, Vector2 position)
+    public BuildTurretCommand(int team, ConfigId turretConfigId, Vector2 position)
     {
         _team = team;
         _turretConfigId = turretConfigId;

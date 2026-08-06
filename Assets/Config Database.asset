@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: TheWars.Simulation::ConfigDatabase
   units:
   - {fileID: 11400000, guid: 27644e0067929d74099bf5fe976a66a6, type: 2}
+  - {fileID: 11400000, guid: 99c142c33d6ab124f8a40ffe7867f5c3, type: 2}
   turrets: []
   bases:
   - {fileID: 11400000, guid: 555dd547a556953419149ec58e2f5f10, type: 2}

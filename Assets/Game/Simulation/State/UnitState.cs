@@ -4,7 +4,7 @@ public sealed class UnitState
 {
     public int Id;
     public int Team;
-    public int ConfigId;
+    public ConfigId ConfigId;
     public Vector2 Position;
     public float Size;
     public Vector2 Destination;

@@ -1,16 +1,14 @@
 using UnityEngine;
 
 [DefaultExecutionOrder(-10000)]
-public sealed class GameStartup : MonoBehaviour
-{
+public sealed class GameStartup : MonoBehaviour {
     [SerializeField] private ConfigDatabase configDatabase;
     [SerializeField] private int tickRate = 60;
-    [SerializeField] private int[] initialBaseConfigIds = { 1, 1 };
+    [SerializeField] private ConfigId[] initialBaseConfigIds = { new(1), new(1) };
     [SerializeField] private int[] initialBaseTeams = { 1, 2 };
     [SerializeField] private Vector2[] initialBasePositions = { new Vector2(-8f, 0f), new Vector2(8f, 0f) };
 
-    private void Awake()
-    {
+    private void Awake() {
         configDatabase.RebuildCache();
 
         var compositionRoot = new GameCompositionRoot(configDatabase, tickRate);
@@ -25,27 +23,22 @@ public sealed class GameStartup : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void InitializeBases(Simulation simulation)
-    {
+    private void InitializeBases(Simulation simulation) {
         var count = initialBaseConfigIds.Length;
-        if (initialBaseTeams.Length < count)
-        {
+        if (initialBaseTeams.Length < count) {
             count = initialBaseTeams.Length;
         }
 
-        if (initialBasePositions.Length < count)
-        {
+        if (initialBasePositions.Length < count) {
             count = initialBasePositions.Length;
         }
 
-        for (var i = 0; i < count; i++)
-        {
+        for (var i = 0; i < count; i++) {
             var config = configDatabase.GetBaseConfig(initialBaseConfigIds[i]);
-            var state = new BaseState
-            {
+            var state = new BaseState {
                 Id = simulation.Frame.World.GenerateEntityId(),
                 Team = initialBaseTeams[i],
-                ConfigId = config.ConfigId,
+                ConfigId = config.Id,
                 Position = initialBasePositions[i],
                 Health = config.StartHealth,
                 Level = 1,
@@ -56,4 +49,3 @@ public sealed class GameStartup : MonoBehaviour
         }
     }
 }
-

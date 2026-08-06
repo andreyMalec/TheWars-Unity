@@ -15,6 +15,6 @@ MonoBehaviour:
   ConfigId: 0
   StartHealth: 500
   StartResources: 0
-  IncomePerTick: 1
+  IncomePerSecond: 5
   UpgradeCost: 100
   HealthPerUpgrade: 100

@@ -394,7 +394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: TheWars.Bootstrap::GameStartup
   configDatabase: {fileID: 11400000, guid: 267f00894bc9a0142a075350d6dd0c39, type: 2}
-  tickRate: 10
+  tickRate: 60
   initialBaseConfigIds: 0000000000000000i
   initialBaseTeams: 0100000002000000i
   initialBasePositions:

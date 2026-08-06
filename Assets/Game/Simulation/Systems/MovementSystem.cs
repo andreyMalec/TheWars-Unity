@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public sealed class MovementSystem : ISystem {
+    private const float StopRange = 0.1f;
+    
     public void Run(Simulation simulation) {
         var world = simulation.Frame.World;
         var dt = simulation.TickDeltaTime;
@@ -25,7 +27,7 @@ public sealed class MovementSystem : ISystem {
             if (state.TargetEntityId != 0 &&
                 world.TryGetEntityPositionAndTeam(state.TargetEntityId, out var targetPosition,
                     out _)) {
-                desired = CalculateDesiredPosition(state.Position, targetPosition, config.Speed, dt, config.AttackRange);
+                desired = CalculateDesiredPosition(state.Position, targetPosition, config.Speed, dt, StopRange);
             } else if (state.HasDestination) {
                 desired = CalculateDesiredPosition(state.Position, state.Destination, config.Speed, dt, 0f);
             }

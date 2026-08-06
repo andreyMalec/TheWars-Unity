@@ -1,25 +1,22 @@
 using System;
 using UnityEngine;
 
-public sealed class UnitView : MonoBehaviour
-{
+public sealed class UnitView : MonoBehaviour {
     public int EntityId;
+    private UnitConfig _unitConfig;
 
-    public void Bind(int entityId)
-    {
+    public void Bind(int entityId, UnitConfig config) {
         EntityId = entityId;
-        name = "UnitView_" + entityId;
+        _unitConfig = config;
+        name = _unitConfig.name + "_" + entityId;
     }
 
-    public void Present(UnitState state)
-    {
+    public void Present(UnitState state) {
         transform.position = new Vector3(state.Position.x, 0f, state.Position.y);
     }
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, 0.1f);
+        Gizmos.DrawWireCube(transform.position, new Vector3(_unitConfig.Size, 1f, 1f));
     }
 }
-
-

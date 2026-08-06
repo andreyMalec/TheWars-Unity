@@ -20,29 +20,14 @@ public sealed class DeathSystem : ISystem {
 
         for (var i = 0; i < _removeBuffer.Count; i++) {
             world.RemoveUnit(_removeBuffer[i]);
-            Debug.Log($"[DeathSystem] Unit (ID {_removeBuffer[i]}) has been removed from the world due to zero health.");
+            Debug.Log(
+                $"[DeathSystem] Unit (ID {_removeBuffer[i]}) has been removed from the world due to zero health.");
         }
 
-        _removeBuffer.Clear();
-        foreach (var pair in world.Turrets) {
-            if (pair.Value.Health <= 0) {
-                _removeBuffer.Add(pair.Key);
-            }
-        }
-
-        for (var i = 0; i < _removeBuffer.Count; i++) {
-            world.RemoveTurret(_removeBuffer[i]);
-        }
-
-        _removeBuffer.Clear();
         foreach (var pair in world.Bases) {
             if (pair.Value.Health <= 0) {
-                _removeBuffer.Add(pair.Key);
+               // TODO win/lose
             }
-        }
-
-        for (var i = 0; i < _removeBuffer.Count; i++) {
-            world.RemoveBase(_removeBuffer[i]);
         }
     }
 }

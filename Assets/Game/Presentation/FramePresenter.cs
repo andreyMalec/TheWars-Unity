@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class FramePresenter : MonoBehaviour
-{
+public sealed class FramePresenter : MonoBehaviour {
     private readonly Dictionary<int, BaseView> _baseViews = new Dictionary<int, BaseView>();
     private readonly Dictionary<int, UnitView> _unitViews = new Dictionary<int, UnitView>();
     private readonly Dictionary<int, TurretView> _turretViews = new Dictionary<int, TurretView>();
@@ -11,13 +10,11 @@ public sealed class FramePresenter : MonoBehaviour
 
     private Simulation _simulation;
 
-    public void Initialize(Simulation simulation)
-    {
+    public void Initialize(Simulation simulation) {
         _simulation = simulation;
     }
 
-    private void LateUpdate()
-    {
+    private void LateUpdate() {
         if (_simulation == null) return;
         PresentBases();
         PresentUnits();
@@ -25,11 +22,9 @@ public sealed class FramePresenter : MonoBehaviour
         PresentProjectiles();
     }
 
-    private void PresentBases()
-    {
+    private void PresentBases() {
         var bases = _simulation.Frame.World.Bases;
-        foreach (var pair in bases)
-        {
+        foreach (var pair in bases) {
             var view = GetOrCreateBaseView(pair.Key);
             view.Present(pair.Value);
         }
@@ -37,23 +32,19 @@ public sealed class FramePresenter : MonoBehaviour
         CleanupMissing(_baseViews, bases);
     }
 
-    private void PresentUnits()
-    {
+    private void PresentUnits() {
         var units = _simulation.Frame.World.Units;
-        foreach (var pair in units)
-        {
-            var view = GetOrCreateUnitView(pair.Key);
+        foreach (var pair in units) {
+            var view = GetOrCreateUnitView(pair.Key, _simulation.ConfigDatabase.GetUnitConfig(pair.Value.ConfigId));
             view.Present(pair.Value);
         }
 
         CleanupMissing(_unitViews, units);
     }
 
-    private void PresentTurrets()
-    {
+    private void PresentTurrets() {
         var turrets = _simulation.Frame.World.Turrets;
-        foreach (var pair in turrets)
-        {
+        foreach (var pair in turrets) {
             var view = GetOrCreateTurretView(pair.Key);
             view.Present(pair.Value);
         }
@@ -61,11 +52,9 @@ public sealed class FramePresenter : MonoBehaviour
         CleanupMissing(_turretViews, turrets);
     }
 
-    private void PresentProjectiles()
-    {
+    private void PresentProjectiles() {
         var projectiles = _simulation.Frame.World.Projectiles;
-        foreach (var pair in projectiles)
-        {
+        foreach (var pair in projectiles) {
             var view = GetOrCreateProjectileView(pair.Key);
             view.Present(pair.Value);
         }
@@ -73,10 +62,8 @@ public sealed class FramePresenter : MonoBehaviour
         CleanupMissing(_projectileViews, projectiles);
     }
 
-    private BaseView GetOrCreateBaseView(int entityId)
-    {
-        if (_baseViews.TryGetValue(entityId, out var view))
-        {
+    private BaseView GetOrCreateBaseView(int entityId) {
+        if (_baseViews.TryGetValue(entityId, out var view)) {
             return view;
         }
 
@@ -88,25 +75,21 @@ public sealed class FramePresenter : MonoBehaviour
         return newView;
     }
 
-    private UnitView GetOrCreateUnitView(int entityId)
-    {
-        if (_unitViews.TryGetValue(entityId, out var view))
-        {
+    private UnitView GetOrCreateUnitView(int entityId, UnitConfig unitConfig) {
+        if (_unitViews.TryGetValue(entityId, out var view)) {
             return view;
         }
 
         var viewObject = new GameObject();
         viewObject.transform.SetParent(transform, false);
         var newView = viewObject.AddComponent<UnitView>();
-        newView.Bind(entityId);
+        newView.Bind(entityId, unitConfig);
         _unitViews.Add(entityId, newView);
         return newView;
     }
 
-    private TurretView GetOrCreateTurretView(int entityId)
-    {
-        if (_turretViews.TryGetValue(entityId, out var view))
-        {
+    private TurretView GetOrCreateTurretView(int entityId) {
+        if (_turretViews.TryGetValue(entityId, out var view)) {
             return view;
         }
 
@@ -118,10 +101,8 @@ public sealed class FramePresenter : MonoBehaviour
         return newView;
     }
 
-    private ProjectileView GetOrCreateProjectileView(int entityId)
-    {
-        if (_projectileViews.TryGetValue(entityId, out var view))
-        {
+    private ProjectileView GetOrCreateProjectileView(int entityId) {
+        if (_projectileViews.TryGetValue(entityId, out var view)) {
             return view;
         }
 
@@ -134,24 +115,18 @@ public sealed class FramePresenter : MonoBehaviour
     }
 
     private void CleanupMissing<TView, TState>(Dictionary<int, TView> views, Dictionary<int, TState> source)
-        where TView : MonoBehaviour
-    {
+        where TView : MonoBehaviour {
         _removeBuffer.Clear();
-        foreach (var pair in views)
-        {
-            if (!source.ContainsKey(pair.Key))
-            {
+        foreach (var pair in views) {
+            if (!source.ContainsKey(pair.Key)) {
                 _removeBuffer.Add(pair.Key);
             }
         }
 
-        for (var i = 0; i < _removeBuffer.Count; i++)
-        {
+        for (var i = 0; i < _removeBuffer.Count; i++) {
             var id = _removeBuffer[i];
             Destroy(views[id].gameObject);
             views.Remove(id);
         }
     }
 }
-
-
