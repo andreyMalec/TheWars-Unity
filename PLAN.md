@@ -45,7 +45,6 @@ Create:
 - Frame
 - Simulation
 - TickManager
-- World
 - EntityId generator
 
 Create interfaces:
@@ -97,7 +96,7 @@ Create states:
 - TurretState
 - ProjectileState
 
-Create collections inside World.
+Create collections inside Frame.
 
 Implement:
 

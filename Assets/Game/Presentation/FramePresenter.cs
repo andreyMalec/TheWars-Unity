@@ -23,7 +23,7 @@ public sealed class FramePresenter : MonoBehaviour {
     }
 
     private void PresentBases() {
-        var bases = _simulation.Frame.World.Bases;
+        var bases = _simulation.Frame.Bases;
         foreach (var pair in bases) {
             var view = GetOrCreateBaseView(pair.Key);
             view.Present(pair.Value);
@@ -33,7 +33,7 @@ public sealed class FramePresenter : MonoBehaviour {
     }
 
     private void PresentUnits() {
-        var units = _simulation.Frame.World.Units;
+        var units = _simulation.Frame.Units;
         foreach (var pair in units) {
             var view = GetOrCreateUnitView(pair.Key, _simulation.ConfigDatabase.GetUnitConfig(pair.Value.ConfigId));
             view.Present(pair.Value);
@@ -43,7 +43,7 @@ public sealed class FramePresenter : MonoBehaviour {
     }
 
     private void PresentTurrets() {
-        var turrets = _simulation.Frame.World.Turrets;
+        var turrets = _simulation.Frame.Turrets;
         foreach (var pair in turrets) {
             var view = GetOrCreateTurretView(pair.Key);
             view.Present(pair.Value);
@@ -53,7 +53,7 @@ public sealed class FramePresenter : MonoBehaviour {
     }
 
     private void PresentProjectiles() {
-        var projectiles = _simulation.Frame.World.Projectiles;
+        var projectiles = _simulation.Frame.Projectiles;
         foreach (var pair in projectiles) {
             var view = GetOrCreateProjectileView(pair.Key);
             view.Present(pair.Value);

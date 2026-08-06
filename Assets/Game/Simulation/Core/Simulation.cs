@@ -45,7 +45,7 @@ public sealed class Simulation {
         CommandQueue.ExecuteAll(this);
 
         for (var i = 0; i < _systems.Count; i++) {
-            _systems[i].Run(this);
+            _systems[i].Run(this,  Frame);
         }
 
         Frame.Tick++;

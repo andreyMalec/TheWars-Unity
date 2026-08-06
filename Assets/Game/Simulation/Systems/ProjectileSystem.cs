@@ -1,15 +1,14 @@
 public sealed class ProjectileSystem : ISystem {
-    public void Run(Simulation simulation) {
-        var world = simulation.Frame.World;
-        var dt = simulation.TickDeltaTime;
+    public void Run(Simulation s, Frame fr) {
+        var dt = s.TickDeltaTime;
 
-        foreach (var pair in world.Projectiles) {
+        foreach (var pair in fr.Projectiles) {
             var projectile = pair.Value;
-            var hasTarget = world.TryGetEntityPositionAndTeam(projectile.TargetEntityId, out var targetPosition, out _);
+            var hasTarget = fr.TryGetEntityPositionAndTeam(projectile.TargetEntityId, out var targetPosition, out _);
 
             if (!hasTarget) {
-                projectile.TargetEntityId = TargetingUtility.FindNearestEnemy(world, projectile.Team, projectile.Position);
-                hasTarget = world.TryGetEntityPositionAndTeam(projectile.TargetEntityId, out targetPosition, out _);
+                projectile.TargetEntityId = TargetingUtility.FindNearestEnemy(fr, projectile.Team, projectile.Position);
+                hasTarget = fr.TryGetEntityPositionAndTeam(projectile.TargetEntityId, out targetPosition, out _);
             }
 
             if (hasTarget) {
@@ -23,7 +22,7 @@ public sealed class ProjectileSystem : ISystem {
             projectile.Lifetime -= dt;
 
             if (projectile.Lifetime <= 0f) {
-                simulation.ProjectileRemovalRequests.Enqueue(projectile.Id);
+                s.ProjectileRemovalRequests.Enqueue(projectile.Id);
             }
         }
     }

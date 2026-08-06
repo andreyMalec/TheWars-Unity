@@ -1,11 +1,11 @@
 using UnityEngine;
 
 public static class TargetingUtility {
-    public static int FindNearestEnemy(World world, int team, Vector2 origin) {
+    public static int FindNearestEnemy(Frame frame, int team, Vector2 origin) {
         var bestDistanceSqr = float.MaxValue;
         var bestId = 0;
 
-        foreach (var pair in world.Units) {
+        foreach (var pair in frame.Units) {
             var unit = pair.Value;
             if (unit.Team == team || unit.Health <= 0) {
                 continue;
@@ -18,7 +18,7 @@ public static class TargetingUtility {
             }
         }
 
-        foreach (var pair in world.Bases) {
+        foreach (var pair in frame.Bases) {
             var baseState = pair.Value;
             if (baseState.Team == team || baseState.Health <= 0) {
                 continue;

@@ -7,16 +7,16 @@ public sealed class AISystem : ISystem {
         _ranged = simulation.ConfigDatabase.GetUnitConfig(1);
     }
 
-    public void Run(Simulation simulation) {
-        if (simulation.Frame.World.TryFindBaseByTeam(1, out var baseState1)) {
+    public void Run(Simulation s, Frame fr) {
+        if (fr.TryFindBaseByTeam(1, out var baseState1)) {
             if (baseState1.Resources >= _melee.Cost) {
-                simulation.EnqueueCommand(new SpawnUnitCommand(1, _melee.Id, baseState1.Position));
+                s.EnqueueCommand(new SpawnUnitCommand(1, _melee.Id, baseState1.Position));
             }
         }
 
-        if (simulation.Frame.World.TryFindBaseByTeam(2, out var baseState2)) {
+        if (fr.TryFindBaseByTeam(2, out var baseState2)) {
             if (baseState2.Resources >= _ranged.Cost) {
-                simulation.EnqueueCommand(new SpawnUnitCommand(2, _ranged.Id, baseState2.Position));
+                s.EnqueueCommand(new SpawnUnitCommand(2, _ranged.Id, baseState2.Position));
             }
         }
     }

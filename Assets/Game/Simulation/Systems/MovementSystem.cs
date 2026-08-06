@@ -4,35 +4,30 @@ using UnityEngine;
 public sealed class MovementSystem : ISystem {
     private const float StopRange = 0.1f;
     
-    public void Run(Simulation simulation) {
-        var world = simulation.Frame.World;
-        var dt = simulation.TickDeltaTime;
-        var sortedIds = new List<int>(world.Units.Keys);
+    public void Run(Simulation s, Frame fr) {
+        var dt = s.TickDeltaTime;
+        var sortedIds = new List<int>(fr.Units.Keys);
         sortedIds.Sort();
 
         var startPositions = new Dictionary<int, Vector2>(sortedIds.Count);
         for (var i = 0; i < sortedIds.Count; i++) {
             var id = sortedIds[i];
-            startPositions[id] = world.Units[id].Position;
+            startPositions[id] = fr.Units[id].Position;
         }
 
         var resolvedPositions = new Dictionary<int, Vector2>(sortedIds.Count);
 
         for (var i = 0; i < sortedIds.Count; i++) {
             var id = sortedIds[i];
-            var state = world.Units[id];
-            var config = simulation.ConfigDatabase.GetUnitConfig(state.ConfigId);
+            var state = fr.Units[id];
+            var config = s.ConfigDatabase.GetUnitConfig(state.ConfigId);
             var desired = state.Position;
 
-            if (state.TargetEntityId != 0 &&
-                world.TryGetEntityPositionAndTeam(state.TargetEntityId, out var targetPosition,
-                    out _)) {
+            if (state.GetTargetPositionAndTeam(fr, out var targetPosition, out _)) {
                 desired = CalculateDesiredPosition(state.Position, targetPosition, config.Speed, dt, StopRange);
-            } else if (state.HasDestination) {
-                desired = CalculateDesiredPosition(state.Position, state.Destination, config.Speed, dt, 0f);
             }
 
-            if (CanMoveTo(world, state.Position, desired, id, state.Size, sortedIds, startPositions, resolvedPositions)) {
+            if (CanMoveTo(fr, state.Position, desired, id, state.Size, sortedIds, startPositions, resolvedPositions)) {
                 state.Position = desired;
             }
 
@@ -41,7 +36,7 @@ public sealed class MovementSystem : ISystem {
     }
 
     private static bool CanMoveTo(
-        World world,
+        Frame frame,
         Vector2 currentPosition,
         Vector2 desiredPosition,
         int unitId,
@@ -70,7 +65,7 @@ public sealed class MovementSystem : ISystem {
                 }
             }
 
-            var otherRadius = world.Units[otherId].Size * 0.5f;
+            var otherRadius = frame.Units[otherId].Size * 0.5f;
             var minDistance = radius + otherRadius;
             if ((desiredPosition - otherPosition).sqrMagnitude < minDistance * minDistance) {
                 return false;

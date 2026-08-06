@@ -3,12 +3,10 @@ using UnityEngine;
 public sealed class DamageSystem : ISystem {
     private const float ProjectileRadius = 0.1f;
 
-    public void Run(Simulation simulation) {
-        var world = simulation.Frame.World;
-
-        foreach (var pair in world.Projectiles) {
+    public void Run(Simulation s, Frame fr) {
+        foreach (var pair in fr.Projectiles) {
             var projectile = pair.Value;
-            if (!world.TryGetEntityPositionTeamAndRadius(projectile.TargetEntityId, out var targetPosition, out _,
+            if (!fr.TryGetEntityPositionTeamAndRadius(projectile.TargetEntityId, out var targetPosition, out _,
                     out var targetRadius)) {
                 continue;
             }
@@ -19,26 +17,26 @@ public sealed class DamageSystem : ISystem {
                 continue;
             }
 
-            simulation.DamageRequests.Enqueue(new DamageRequest {
+            s.DamageRequests.Enqueue(new DamageRequest {
                 SourceEntityId = projectile.SourceEntityId,
                 TargetEntityId = projectile.TargetEntityId,
                 Amount = projectile.Damage
             });
 
-            simulation.ProjectileRemovalRequests.Enqueue(projectile.Id);
+            s.ProjectileRemovalRequests.Enqueue(projectile.Id);
         }
 
-        while (simulation.DamageRequests.Count > 0) {
-            var request = simulation.DamageRequests.Dequeue();
+        while (s.DamageRequests.Count > 0) {
+            var request = s.DamageRequests.Dequeue();
 
-            if (world.TryFindUnit(request.TargetEntityId, out var unit)) {
+            if (fr.TryFindUnit(request.TargetEntityId, out var unit)) {
                 unit.Health -= request.Amount;
                 Debug.Log(
                     $"[DamageSystem] Unit (Team {unit.Team}, Config {unit.ConfigId}) took {request.Amount} damage. Remaining health: {unit.Health}");
                 continue;
             }
 
-            if (world.TryFindBase(request.TargetEntityId, out var baseState)) {
+            if (fr.TryFindBase(request.TargetEntityId, out var baseState)) {
                 baseState.Health -= request.Amount;
             }
         }

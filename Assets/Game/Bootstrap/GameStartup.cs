@@ -36,7 +36,7 @@ public sealed class GameStartup : MonoBehaviour {
         for (var i = 0; i < count; i++) {
             var config = configDatabase.GetBaseConfig(initialBaseConfigIds[i]);
             var state = new BaseState {
-                Id = simulation.Frame.World.GenerateEntityId(),
+                Id = simulation.Frame.GenerateEntityId(),
                 Team = initialBaseTeams[i],
                 ConfigId = config.Id,
                 Position = initialBasePositions[i],
@@ -45,7 +45,7 @@ public sealed class GameStartup : MonoBehaviour {
                 Resources = config.StartResources
             };
 
-            simulation.Frame.World.AddBase(state);
+            simulation.Frame.AddBase(state);
         }
     }
 }

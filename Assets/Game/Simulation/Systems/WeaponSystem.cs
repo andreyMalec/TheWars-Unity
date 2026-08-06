@@ -1,13 +1,12 @@
 using UnityEngine;
 
 public sealed class WeaponSystem : ISystem {
-    public void Run(Simulation simulation) {
-        var world = simulation.Frame.World;
-        var dt = simulation.TickDeltaTime;
+    public void Run(Simulation s, Frame fr) {
+        var dt = s.TickDeltaTime;
 
-        foreach (var pair in world.Units) {
+        foreach (var pair in fr.Units) {
             var unit = pair.Value;
-            var config = simulation.ConfigDatabase.GetUnitConfig(unit.ConfigId);
+            var config = s.ConfigDatabase.GetUnitConfig(unit.ConfigId);
 
             if (unit.Cooldown > 0f) {
                 unit.Cooldown -= dt;
@@ -17,7 +16,7 @@ public sealed class WeaponSystem : ISystem {
                 continue;
             }
 
-            if (!world.TryGetEntityPositionAndTeam(unit.TargetEntityId, out var targetPosition, out _)) {
+            if (!fr.TryGetEntityPositionAndTeam(unit.TargetEntityId, out var targetPosition, out _)) {
                 continue;
             }
 
@@ -26,14 +25,23 @@ public sealed class WeaponSystem : ISystem {
                 continue;
             }
 
-            SpawnProjectile(simulation, unit.Team, unit.Id, unit.TargetEntityId, unit.Position, config.Damage,
-                config.ProjectileSpeed);
+            if (config.type == UnitAttackType.Ranged) {
+                SpawnProjectile(fr, unit.Team, unit.Id, unit.TargetEntityId, unit.Position, config.Damage,
+                    config.ProjectileSpeed);
+            } else {
+                s.DamageRequests.Enqueue(new DamageRequest {
+                    SourceEntityId = unit.Id,
+                    TargetEntityId = unit.TargetEntityId,
+                    Amount = config.Damage
+                });
+            }
+
             unit.Cooldown = config.AttackInterval > 0f ? config.AttackInterval : 1f;
         }
 
-        foreach (var pair in world.Turrets) {
+        foreach (var pair in fr.Turrets) {
             var turret = pair.Value;
-            var config = simulation.ConfigDatabase.GetTurretConfig(turret.ConfigId);
+            var config = s.ConfigDatabase.GetTurretConfig(turret.ConfigId);
 
             if (turret.Cooldown > 0f) {
                 turret.Cooldown -= dt;
@@ -43,7 +51,7 @@ public sealed class WeaponSystem : ISystem {
                 continue;
             }
 
-            if (!world.TryGetEntityPositionAndTeam(turret.TargetEntityId, out var targetPosition, out _)) {
+            if (!fr.TryGetEntityPositionAndTeam(turret.TargetEntityId, out var targetPosition, out _)) {
                 continue;
             }
 
@@ -52,14 +60,14 @@ public sealed class WeaponSystem : ISystem {
                 continue;
             }
 
-            SpawnProjectile(simulation, turret.Team, turret.Id, turret.TargetEntityId, turret.Position, config.Damage,
+            SpawnProjectile(fr, turret.Team, turret.Id, turret.TargetEntityId, turret.Position, config.Damage,
                 config.ProjectileSpeed);
             turret.Cooldown = config.AttackInterval > 0f ? config.AttackInterval : 1f;
         }
     }
 
     private static void SpawnProjectile(
-        Simulation simulation,
+        Frame fr,
         int team,
         int sourceEntityId,
         int targetEntityId,
@@ -67,10 +75,8 @@ public sealed class WeaponSystem : ISystem {
         int damage,
         float speed
     ) {
-        var world = simulation.Frame.World;
-
         var state = new ProjectileState {
-            Id = world.GenerateEntityId(),
+            Id = fr.GenerateEntityId(),
             Team = team,
             SourceEntityId = sourceEntityId,
             TargetEntityId = targetEntityId,
@@ -81,6 +87,6 @@ public sealed class WeaponSystem : ISystem {
             Lifetime = 5f
         };
 
-        world.AddProjectile(state);
+        fr.AddProjectile(state);
     }
 }
