@@ -5,7 +5,18 @@ public sealed class BuildSystem : ISystem
         while (simulation.BuildRequests.Count > 0)
         {
             var request = simulation.BuildRequests.Dequeue();
+            if (!simulation.Frame.World.TryFindBaseByTeam(request.Team, out var baseState))
+            {
+                continue;
+            }
+
             var config = simulation.ConfigDatabase.GetTurretConfig(request.TurretConfigId);
+            if (baseState.Resources < config.Cost)
+            {
+                continue;
+            }
+
+            baseState.Resources -= config.Cost;
 
             var state = new TurretState
             {
@@ -14,6 +25,7 @@ public sealed class BuildSystem : ISystem
                 ConfigId = request.TurretConfigId,
                 Position = request.Position,
                 Health = config.MaxHealth,
+                TargetEntityId = 0,
                 Cooldown = 0f
             };
 

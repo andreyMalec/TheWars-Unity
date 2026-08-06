@@ -5,6 +5,7 @@ public struct SpawnUnitRequest
     public int Team;
     public int UnitConfigId;
     public Vector2 Position;
+    public Vector2 Destination;
 }
 
 public struct BuildTurretRequest
@@ -17,5 +18,12 @@ public struct BuildTurretRequest
 public struct UpgradeBaseRequest
 {
     public int BaseEntityId;
+}
+
+public struct DamageRequest
+{
+    public int SourceEntityId;
+    public int TargetEntityId;
+    public int Amount;
 }
 

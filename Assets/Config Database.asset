@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7c60161789a422cb83149cd07f72925, type: 3}
   m_Name: Config Database
   m_EditorClassIdentifier: TheWars.Simulation::ConfigDatabase
-  units: []
+  units:
+  - {fileID: 11400000, guid: 27644e0067929d74099bf5fe976a66a6, type: 2}
   turrets: []
-  bases: []
+  bases:
+  - {fileID: 11400000, guid: 555dd547a556953419149ec58e2f5f10, type: 2}

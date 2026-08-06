@@ -5,7 +5,7 @@ public sealed class GameCompositionRoot
 
     public GameCompositionRoot(ConfigDatabase configDatabase, int tickRate)
     {
-        Simulation = new Simulation(configDatabase);
+        Simulation = new Simulation(configDatabase, tickRate);
         TickManager = new TickManager(tickRate);
     }
 }

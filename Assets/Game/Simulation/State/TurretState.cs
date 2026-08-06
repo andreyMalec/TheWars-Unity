@@ -7,6 +7,7 @@ public sealed class TurretState
     public int ConfigId;
     public Vector2 Position;
     public int Health;
+    public int TargetEntityId;
     public float Cooldown;
 }
 

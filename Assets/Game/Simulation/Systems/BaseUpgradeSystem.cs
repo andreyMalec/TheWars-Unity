@@ -9,6 +9,12 @@ public sealed class BaseUpgradeSystem : ISystem
             if (simulation.Frame.World.TryFindBase(request.BaseEntityId, out var baseState))
             {
                 var config = simulation.ConfigDatabase.GetBaseConfig(baseState.ConfigId);
+                if (baseState.Resources < config.UpgradeCost)
+                {
+                    continue;
+                }
+
+                baseState.Resources -= config.UpgradeCost;
                 baseState.Level += 1;
                 baseState.Health += config.HealthPerUpgrade;
             }

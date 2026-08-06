@@ -8,5 +8,6 @@ public sealed class BaseState
     public Vector2 Position;
     public int Health;
     public int Level;
+    public int Resources;
 }
 

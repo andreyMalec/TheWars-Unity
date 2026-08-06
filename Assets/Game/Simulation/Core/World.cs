@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public sealed class World
 {
@@ -27,6 +28,21 @@ public sealed class World
     public bool TryFindBase(int id, out BaseState state)
     {
         return Bases.TryGetValue(id, out state);
+    }
+
+    public bool TryFindBaseByTeam(int team, out BaseState state)
+    {
+        foreach (var pair in Bases)
+        {
+            if (pair.Value.Team == team)
+            {
+                state = pair.Value;
+                return true;
+            }
+        }
+
+        state = null;
+        return false;
     }
 
     public void AddUnit(UnitState state)
@@ -72,6 +88,66 @@ public sealed class World
     public bool TryFindProjectile(int id, out ProjectileState state)
     {
         return Projectiles.TryGetValue(id, out state);
+    }
+
+    public bool TryGetEntityPositionAndTeam(int entityId, out Vector2 position, out int team)
+    {
+        if (Units.TryGetValue(entityId, out var unit))
+        {
+            position = unit.Position;
+            team = unit.Team;
+            return true;
+        }
+
+        if (Turrets.TryGetValue(entityId, out var turret))
+        {
+            position = turret.Position;
+            team = turret.Team;
+            return true;
+        }
+
+        if (Bases.TryGetValue(entityId, out var baseState))
+        {
+            position = baseState.Position;
+            team = baseState.Team;
+            return true;
+        }
+
+        position = Vector2.zero;
+        team = 0;
+        return false;
+    }
+
+    public bool TryGetEntityPositionTeamAndRadius(int entityId, out Vector2 position, out int team, out float radius)
+    {
+        if (Units.TryGetValue(entityId, out var unit))
+        {
+            position = unit.Position;
+            team = unit.Team;
+            radius = unit.Size * 0.5f;
+            return true;
+        }
+
+        if (Turrets.TryGetValue(entityId, out var turret))
+        {
+            position = turret.Position;
+            team = turret.Team;
+            radius = 0.5f;
+            return true;
+        }
+
+        if (Bases.TryGetValue(entityId, out var baseState))
+        {
+            position = baseState.Position;
+            team = baseState.Team;
+            radius = 1f;
+            return true;
+        }
+
+        position = Vector2.zero;
+        team = 0;
+        radius = 0f;
+        return false;
     }
 }
 
