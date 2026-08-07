@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cd0ff2cb96d43f58e80d5f21f706579, type: 3}
   m_Name: New Base Config
   m_EditorClassIdentifier: TheWars.Simulation::BaseConfig
-  ConfigId: 0
   StartHealth: 500
   StartResources: 0
   IncomePerSecond: 5
   UpgradeCost: 100
   HealthPerUpgrade: 100
+  Bounds: {x: 0, y: 0, z: 0.5, w: 2}

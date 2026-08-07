@@ -3,8 +3,8 @@ public sealed class AISystem : ISystem {
     private UnitConfig _ranged;
 
     public void Init(Simulation simulation) {
-        _melee = simulation.ConfigDatabase.GetUnitConfig(0);
-        _ranged = simulation.ConfigDatabase.GetUnitConfig(1);
+        _melee = simulation.Frame.FindConfig<UnitConfig>(0);
+        _ranged = simulation.Frame.FindConfig<UnitConfig>(1);
     }
 
     public void Run(Simulation s, Frame fr) {

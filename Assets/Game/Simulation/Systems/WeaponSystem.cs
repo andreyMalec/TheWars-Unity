@@ -2,11 +2,11 @@ using UnityEngine;
 
 public sealed class WeaponSystem : ISystem {
     public void Run(Simulation s, Frame fr) {
-        var dt = s.TickDeltaTime;
+        var dt = fr.DeltaTime;
 
         foreach (var pair in fr.Units) {
             var unit = pair.Value;
-            var config = s.ConfigDatabase.GetUnitConfig(unit.ConfigId);
+            var config = fr.FindConfig<UnitConfig>(unit.ConfigId);
 
             if (unit.Cooldown > 0f) {
                 unit.Cooldown -= dt;
@@ -42,7 +42,7 @@ public sealed class WeaponSystem : ISystem {
 
         foreach (var pair in fr.Turrets) {
             var turret = pair.Value;
-            var config = s.ConfigDatabase.GetTurretConfig(turret.ConfigId);
+            var config = fr.FindConfig<TurretConfig>(turret.ConfigId);
 
             if (turret.Cooldown > 0f) {
                 turret.Cooldown -= dt;

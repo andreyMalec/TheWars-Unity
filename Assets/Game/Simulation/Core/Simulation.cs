@@ -4,9 +4,7 @@ public sealed class Simulation {
     private readonly List<ISystem> _systems = new List<ISystem>();
 
     public Frame Frame { get; }
-    public ConfigDatabase ConfigDatabase { get; }
     public CommandQueue CommandQueue { get; }
-    public float TickDeltaTime { get; }
 
     public readonly Queue<SpawnUnitRequest> SpawnRequests = new Queue<SpawnUnitRequest>();
     public readonly Queue<BuildTurretRequest> BuildRequests = new Queue<BuildTurretRequest>();
@@ -15,10 +13,8 @@ public sealed class Simulation {
     public readonly Queue<int> ProjectileRemovalRequests = new Queue<int>();
 
     public Simulation(ConfigDatabase configDatabase, int tickRate) {
-        Frame = new Frame();
-        ConfigDatabase = configDatabase;
+        Frame = new Frame(1f / tickRate, configDatabase);
         CommandQueue = new CommandQueue();
-        TickDeltaTime = 1f / tickRate;
 
         _systems.Add(new EconomySystem());
         _systems.Add(new BuildSystem());

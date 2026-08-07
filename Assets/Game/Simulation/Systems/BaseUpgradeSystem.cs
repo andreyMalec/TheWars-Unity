@@ -4,7 +4,7 @@ public sealed class BaseUpgradeSystem : ISystem {
             var request = s.UpgradeRequests.Dequeue();
 
             if (fr.TryFindBase(request.BaseEntityId, out var baseState)) {
-                var config = s.ConfigDatabase.GetBaseConfig(baseState.ConfigId);
+                var config = fr.FindConfig<BaseConfig>(baseState.ConfigId);
                 if (baseState.Resources < config.UpgradeCost) {
                     continue;
                 }

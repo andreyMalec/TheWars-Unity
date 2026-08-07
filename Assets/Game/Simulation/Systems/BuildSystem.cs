@@ -6,7 +6,7 @@ public sealed class BuildSystem : ISystem {
                 continue;
             }
 
-            var config = s.ConfigDatabase.GetTurretConfig(request.TurretConfigId);
+            var config = fr.FindConfig<TurretConfig>(request.TurretConfigId);
             if (baseState.Resources < config.Cost) {
                 continue;
             }

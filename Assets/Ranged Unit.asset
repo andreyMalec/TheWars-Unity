@@ -18,6 +18,6 @@ MonoBehaviour:
   Size: 0.2
   Speed: 1
   Damage: 40
-  AttackInterval: 1
+  AttackInterval: 0.75
   AttackRange: 5
   ProjectileSpeed: 3

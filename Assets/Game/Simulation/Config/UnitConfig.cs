@@ -8,8 +8,8 @@ public enum UnitAttackType {
 }
 
 [CreateAssetMenu(menuName = "Game/Config/Unit Config")]
-public sealed class UnitConfig : ScriptableObject {
-    public ConfigId Id;
+public sealed class UnitConfig : ScriptableObject, EntityConfig {
+    public ConfigId Id { get; private set; }
     public UnitAttackType type;
     public int Cost;
     public int MaxHealth;

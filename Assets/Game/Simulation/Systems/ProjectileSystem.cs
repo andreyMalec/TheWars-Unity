@@ -2,7 +2,7 @@ using UnityEngine;
 
 public sealed class ProjectileSystem : ISystem {
     public void Run(Simulation s, Frame fr) {
-        var dt = s.TickDeltaTime;
+        var dt = fr.DeltaTime;
 
         foreach (var pair in fr.Projectiles) {
             var projectile = pair.Value;

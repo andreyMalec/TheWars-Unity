@@ -4,7 +4,6 @@ using UnityEngine;
 public sealed class GameStartup : MonoBehaviour {
     [SerializeField] private ConfigDatabase configDatabase;
     [SerializeField] private int tickRate = 60;
-    [SerializeField] private ConfigId[] initialBaseConfigIds = { new(1), new(1) };
     [SerializeField] private int[] initialBaseTeams = { 1, 2 };
     [SerializeField] private Vector2[] initialBasePositions = { new Vector2(-8f, 0f), new Vector2(8f, 0f) };
 
@@ -24,7 +23,7 @@ public sealed class GameStartup : MonoBehaviour {
     }
 
     private void InitializeBases(Simulation simulation) {
-        var count = initialBaseConfigIds.Length;
+        var count = 2;
         if (initialBaseTeams.Length < count) {
             count = initialBaseTeams.Length;
         }
@@ -34,7 +33,7 @@ public sealed class GameStartup : MonoBehaviour {
         }
 
         for (var i = 0; i < count; i++) {
-            var config = configDatabase.GetBaseConfig(initialBaseConfigIds[i]);
+            var config = configDatabase.GetConfig<BaseConfig>(0);
             var state = new BaseState {
                 Id = simulation.Frame.GenerateEntityId(),
                 Team = initialBaseTeams[i],
@@ -44,7 +43,7 @@ public sealed class GameStartup : MonoBehaviour {
                 Level = 1,
                 Resources = config.StartResources
             };
-
+            
             simulation.Frame.AddBase(state);
         }
     }

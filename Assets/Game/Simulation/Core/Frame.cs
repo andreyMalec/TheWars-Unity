@@ -14,7 +14,23 @@ public sealed class Frame {
     private readonly Dictionary<int, TurretState> _turrets = new();
     private readonly Dictionary<int, ProjectileState> _projectiles = new();
 
+    private readonly ConfigDatabase _configDatabase;
+
     public int Tick = 0;
+    public float DeltaTime { get; private set; }
+
+    public Frame(float tickDeltaTime, ConfigDatabase configDatabase) {
+        DeltaTime = tickDeltaTime;
+        _configDatabase = configDatabase;
+    }
+
+    public T FindConfig<T>(ConfigId configId) where T : EntityConfig {
+        return _configDatabase.GetConfig<T>(configId);
+    }
+
+    public T FindConfig<T>(int index) where T : EntityConfig {
+        return _configDatabase.GetConfig<T>(index);
+    }
 
     public int GenerateEntityId() {
         return _entityIdGenerator.Next();

@@ -8,7 +8,12 @@ public sealed class SpawnSystem : ISystem {
                 break;
             }
 
-            var config = s.ConfigDatabase.GetUnitConfig(request.UnitConfigId);
+            var baseConfig = fr.FindConfig<BaseConfig>(baseState.ConfigId);
+            if (IsSpawnAreaOccupied(fr, baseState, baseConfig)) {
+                break;
+            }
+
+            var config = fr.FindConfig<UnitConfig>(request.UnitConfigId);
             if (baseState.Resources < config.Cost) {
                 break;
             }
@@ -31,5 +36,16 @@ public sealed class SpawnSystem : ISystem {
             Debug.Log(
                 $"[SpawnSystem] Spawned unit (Team {state.Team}, Config {state.ConfigId}) at position {state.Position}. Remaining resources: {baseState.Resources}");
         }
+    }
+
+    private static bool IsSpawnAreaOccupied(Frame frame, BaseState baseState, BaseConfig baseConfig) {
+        foreach (var pair in frame.Units) {
+            var unit = pair.Value;
+            if (BaseBoundsUtility.ContainsPoint(baseState, baseConfig, unit.Position)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

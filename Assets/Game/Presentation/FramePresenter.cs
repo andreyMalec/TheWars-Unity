@@ -25,7 +25,7 @@ public sealed class FramePresenter : MonoBehaviour {
     private void PresentBases() {
         var bases = _simulation.Frame.Bases;
         foreach (var pair in bases) {
-            var view = GetOrCreateBaseView(pair.Key);
+            var view = GetOrCreateBaseView(pair.Key, _simulation.Frame.FindConfig<BaseConfig>(pair.Value.ConfigId));
             view.Present(pair.Value);
         }
 
@@ -35,7 +35,7 @@ public sealed class FramePresenter : MonoBehaviour {
     private void PresentUnits() {
         var units = _simulation.Frame.Units;
         foreach (var pair in units) {
-            var view = GetOrCreateUnitView(pair.Key, _simulation.ConfigDatabase.GetUnitConfig(pair.Value.ConfigId));
+            var view = GetOrCreateUnitView(pair.Key, _simulation.Frame.FindConfig<UnitConfig>(pair.Value.ConfigId));
             view.Present(pair.Value);
         }
 
@@ -62,7 +62,7 @@ public sealed class FramePresenter : MonoBehaviour {
         CleanupMissing(_projectileViews, projectiles);
     }
 
-    private BaseView GetOrCreateBaseView(int entityId) {
+    private BaseView GetOrCreateBaseView(int entityId, BaseConfig baseConfig) {
         if (_baseViews.TryGetValue(entityId, out var view)) {
             return view;
         }
@@ -70,7 +70,7 @@ public sealed class FramePresenter : MonoBehaviour {
         var viewObject = new GameObject();
         viewObject.transform.SetParent(transform, false);
         var newView = viewObject.AddComponent<BaseView>();
-        newView.Bind(entityId);
+        newView.Bind(entityId, baseConfig);
         _baseViews.Add(entityId, newView);
         return newView;
     }

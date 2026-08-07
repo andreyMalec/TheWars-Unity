@@ -2,51 +2,83 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public struct ConfigEntry {
+    public string type;
+    public ScriptableObject[] items;
+}
+
 [CreateAssetMenu(menuName = "Game/Config Database")]
 public sealed class ConfigDatabase : ScriptableObject {
-    [SerializeField] private UnitConfig[] units = Array.Empty<UnitConfig>();
-    [SerializeField] private TurretConfig[] turrets = Array.Empty<TurretConfig>();
-    [SerializeField] private BaseConfig[] bases = Array.Empty<BaseConfig>();
+    [SerializeField] private ConfigEntry[] configs = Array.Empty<ConfigEntry>();
 
-    private readonly Dictionary<ConfigId, UnitConfig> _unitById = new();
-    private readonly Dictionary<ConfigId, TurretConfig> _turretById = new();
-    private readonly Dictionary<ConfigId, BaseConfig> _baseById = new();
+    private readonly Dictionary<Type, Dictionary<ConfigId, EntityConfig>> _entities = new();
 
     private void OnEnable() {
         RebuildCache();
     }
 
     public void RebuildCache() {
-        _unitById.Clear();
-        _turretById.Clear();
-        _baseById.Clear();
+        _entities.Clear();
 
-        for (var i = 0; i < units.Length; i++) {
-            _unitById[units[i].Id] = units[i];
+        for (var i = 0; i < configs.Length; i++) {
+            var config = configs[i];
+            if (config.items.Length == 0) continue;
+            var type = config.items[0]?.GetType();
+            if (type == null) continue;
+            _entities[type] = new Dictionary<ConfigId, EntityConfig>();
+
+            for (var j = 0; j < config.items.Length; j++) {
+                var item = (EntityConfig)config.items[j];
+                _entities[type][item.Id] = item;
+            }
+        }
+    }
+
+    private void OnValidate() {
+        for (var i = 0; i < configs.Length; i++) {
+            var config = configs[i];
+            if (config.items.Length == 0) continue;
+            var type = config.items[0]?.GetType();
+            if (type == null) continue;
+            configs[i].type = type.Name;
+
+            for (var j = 0; j < config.items.Length; j++) {
+                var item = config.items[j];
+                if (item is EntityConfig) {
+                    if (item.GetType() != type) {
+                        Debug.LogError(
+                            $"[ConfigDatabase] Config item {item.name} is of type {item.GetType()} but expected {type}");
+                    }
+                } else {
+                    Debug.LogError(
+                        $"[ConfigDatabase] Config item {item.name} is not of type EntityConfig");
+                }
+            }
+        }
+    }
+
+    public T GetConfig<T>(ConfigId configId) where T : EntityConfig {
+        if (_entities.TryGetValue(typeof(T), out var map)) {
+            if (map.TryGetValue(configId, out var config)) {
+                if (config is T configInternal)
+                    return configInternal;
+            }
         }
 
-        for (var i = 0; i < turrets.Length; i++) {
-            _turretById[turrets[i].Id] = turrets[i];
+        Debug.Log($"[GetConfig] No config found for {configId} type {typeof(T)}");
+        return default(T);
+    }
+
+    public T GetConfig<T>(int index) where T : EntityConfig {
+        foreach (var entry in configs) {
+            if (entry.items.Length <= index) continue;
+            if (entry.type != typeof(T).Name) continue;
+            if (entry.items[index] is T config)
+                return config;
         }
 
-        for (var i = 0; i < bases.Length; i++) {
-            _baseById[bases[i].Id] = bases[i];
-        }
-    }
-
-    public UnitConfig GetUnitConfig(ConfigId configId) {
-        return _unitById.TryGetValue(configId, out var config) ? config : units[0];
-    }
-
-    public UnitConfig GetUnitConfig(int index) {
-        return units[index];
-    }
-
-    public TurretConfig GetTurretConfig(ConfigId configId) {
-        return _turretById.TryGetValue(configId, out var config) ? config : turrets[0];
-    }
-
-    public BaseConfig GetBaseConfig(ConfigId configId) {
-        return _baseById.TryGetValue(configId, out var config) ? config : bases[0];
+        Debug.Log($"[GetConfig] No config found for index {index} type {typeof(T)}");
+        return default(T);
     }
 }
