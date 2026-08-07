@@ -20,24 +20,24 @@ public sealed class WeaponSystem : ISystem {
                 continue;
             }
 
-            var inRange = (targetPosition - unit.Position).sqrMagnitude <= config.AttackRange * config.AttackRange;
+            var inRange = (targetPosition - unit.Position).sqrMagnitude <= config.attackRange * config.attackRange;
             if (!inRange || unit.Cooldown > 0f) {
                 continue;
             }
 
             if (config.type == UnitAttackType.Ranged) {
                 var direction = (targetPosition - unit.Position).normalized;
-                SpawnProjectile(fr, unit.Team, unit.Id, unit.TargetEntityId, unit.Position, direction, config.Damage,
-                    config.ProjectileSpeed);
+                SpawnProjectile(fr, unit.Team, unit.Id, unit.TargetEntityId, unit.Position, direction, config.damage,
+                    config.projectileSpeed);
             } else {
                 s.DamageRequests.Enqueue(new DamageRequest {
                     SourceEntityId = unit.Id,
                     TargetEntityId = unit.TargetEntityId,
-                    Amount = config.Damage
+                    Amount = config.damage
                 });
             }
 
-            unit.Cooldown = config.AttackInterval > 0f ? config.AttackInterval : 1f;
+            unit.Cooldown = config.attackInterval > 0f ? config.attackInterval : 1f;
         }
 
         foreach (var pair in fr.Turrets) {

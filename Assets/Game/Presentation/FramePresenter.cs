@@ -80,9 +80,8 @@ public sealed class FramePresenter : MonoBehaviour {
             return view;
         }
 
-        var viewObject = new GameObject();
-        viewObject.transform.SetParent(transform, false);
-        var newView = viewObject.AddComponent<UnitView>();
+        var viewObject = Instantiate(unitConfig.prefab, transform, false);
+        var newView = viewObject.GetComponent<UnitView>();
         newView.Bind(entityId, unitConfig);
         _unitViews.Add(entityId, newView);
         return newView;

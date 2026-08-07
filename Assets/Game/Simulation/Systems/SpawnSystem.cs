@@ -14,11 +14,11 @@ public sealed class SpawnSystem : ISystem {
             }
 
             var config = fr.FindConfig<UnitConfig>(request.UnitConfigId);
-            if (baseState.Resources < config.Cost) {
+            if (baseState.Resources < config.cost) {
                 break;
             }
 
-            baseState.Resources -= config.Cost;
+            baseState.Resources -= config.cost;
             s.SpawnRequests.Dequeue();
 
             var state = new UnitState {
@@ -26,8 +26,8 @@ public sealed class SpawnSystem : ISystem {
                 Team = request.Team,
                 ConfigId = request.UnitConfigId,
                 Position = request.Position,
-                Size = config.Size,
-                Health = config.MaxHealth,
+                Size = 1,//config.size,
+                Health = config.maxHealth,
                 TargetEntityId = 0,
                 Cooldown = 0f
             };

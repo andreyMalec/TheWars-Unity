@@ -37,7 +37,7 @@ public sealed class GameStartup : MonoBehaviour {
             var state = new BaseState {
                 Id = simulation.Frame.GenerateEntityId(),
                 Team = initialBaseTeams[i],
-                ConfigId = config.Id,
+                ConfigId = config.id,
                 Position = initialBasePositions[i],
                 Health = config.StartHealth,
                 Level = 1,

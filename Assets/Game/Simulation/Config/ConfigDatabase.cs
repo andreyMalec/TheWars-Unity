@@ -30,7 +30,7 @@ public sealed class ConfigDatabase : ScriptableObject {
 
             for (var j = 0; j < config.items.Length; j++) {
                 var item = (EntityConfig)config.items[j];
-                _entities[type][item.Id] = item;
+                _entities[type][item.id] = item;
             }
         }
     }

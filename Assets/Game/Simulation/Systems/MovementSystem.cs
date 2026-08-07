@@ -23,7 +23,7 @@ public sealed class MovementSystem : ISystem {
             var config = fr.FindConfig<UnitConfig>(state.ConfigId);
 
             var targetPosition = fr.GetEnemyBasePosition(state);
-            var desired = CalculateDesiredPosition(state.Position, targetPosition, config.Speed, dt, StopRange);
+            var desired = CalculateDesiredPosition(state.Position, targetPosition, config.speed, dt, StopRange);
 
             if (CanMoveTo(s, fr, state.Team, state.Position, desired, id, state.Size, sortedIds, startPositions,
                     resolvedPositions)) {

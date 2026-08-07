@@ -2,7 +2,8 @@
   "name": "TheWars.Presentation",
   "rootNamespace": "",
   "references": [
-    "TheWars.Simulation"
+    "TheWars.Simulation",
+    "NaughtyAttributes.Core"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

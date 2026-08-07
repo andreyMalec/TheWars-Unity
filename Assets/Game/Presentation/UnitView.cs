@@ -3,20 +3,26 @@ using UnityEngine;
 
 public sealed class UnitView : MonoBehaviour {
     public int EntityId;
-    private UnitConfig _unitConfig;
+    public UnitConfig unitConfig;
+    private SpriteRenderer _renderer;
+
+    private Vector2 _position;
+
+    private void Awake() {
+        _renderer = GetComponent<SpriteRenderer>();
+    }
 
     public void Bind(int entityId, UnitConfig config) {
         EntityId = entityId;
-        _unitConfig = config;
-        name = _unitConfig.name + "_" + entityId;
+        unitConfig = config;
+        name = unitConfig.name + "_" + entityId;
     }
 
     public void Present(UnitState state) {
-        transform.position = new Vector3(state.Position.x, 0f, state.Position.y);
-    }
+        if (!Mathf.Approximately(state.Position.x, _position.x))
+            _renderer.flipX = state.Position.x < _position.x;
 
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, new Vector3(_unitConfig.Size, 1f, 1f));
+        transform.position = new Vector3(state.Position.x, state.Position.y, 0f);
+        _position = state.Position;
     }
 }

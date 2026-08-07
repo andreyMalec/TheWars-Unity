@@ -2,7 +2,7 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Config/Turret Config")]
 public sealed class TurretConfig : ScriptableObject, EntityConfig {
-    public ConfigId Id { get; private set; }
+    public ConfigId id { get; private set; }
     public int Cost;
     public float AttackRange;
     public float AttackInterval;
@@ -10,6 +10,6 @@ public sealed class TurretConfig : ScriptableObject, EntityConfig {
     public int Damage;
 
     private void OnValidate() {
-        Id = ConfigId.ForObject(this);
+        id = ConfigId.ForObject(this);
     }
 }
