@@ -24,3 +24,6 @@ MonoBehaviour:
   - type: ProjectileConfig
     items:
     - {fileID: 11400000, guid: 5d17898f5837a0a4a8bcfcad9d6163be, type: 2}
+  - type: TurretConfig
+    items:
+    - {fileID: 11400000, guid: dfecae10a26272f45b81636470e74b74, type: 2}

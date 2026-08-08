@@ -13,6 +13,7 @@ public sealed class TurretState {
     public ConfigId ConfigId;
     public TurretSlot Slot;
     public Vector2 Position;
+    public float Rotation;
     public int TargetEntityId;
     public float Cooldown;
 }

@@ -18,7 +18,7 @@ public sealed class BuildSystem : ISystem {
                 Id = fr.GenerateEntityId(),
                 Team = request.Team,
                 ConfigId = request.TurretConfigId,
-                Position = baseConfig.slotPositions[(int)request.Slot],
+                Position = baseConfig.slotPositions[(int)request.Slot] + baseState.Position,
                 Slot = request.Slot,
                 TargetEntityId = 0,
                 Cooldown = 0f

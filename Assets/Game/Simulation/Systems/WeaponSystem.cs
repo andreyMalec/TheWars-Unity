@@ -58,56 +58,51 @@ public sealed class WeaponSystem : ISystem {
         }
 
         foreach (var pair in fr.Turrets) {
-            // var turret = pair.Value; TODO
-            // var config = fr.FindConfig<TurretConfig>(turret.ConfigId);
-            //
-            // if (turret.Cooldown > 0f) {
-            //     turret.Cooldown -= dt;
-            // }
-            //
-            // if (turret.TargetEntityId == 0) {
-            //     continue;
-            // }
-            //
-            // if (!fr.TryGetEntityPositionAndTeam(turret.TargetEntityId, out var targetPosition, out _)) {
-            //     continue;
-            // }
-            //
-            // var inRange = (targetPosition - turret.Position).sqrMagnitude <= config.AttackRange * config.AttackRange;
-            // if (!inRange || turret.Cooldown > 0f) {
-            //     continue;
-            // }
-            //
-            // var direction = (targetPosition - turret.Position).normalized;
-            // SpawnProjectile(fr, turret.Team, turret.Id, turret.TargetEntityId, turret.Position, direction,
-            //     config.Damage,
-            //     config.ProjectileSpeed);
-            // turret.Cooldown = config.AttackInterval > 0f ? config.AttackInterval : 1f;
+            var turret = pair.Value;
+            var config = fr.FindConfig<TurretConfig>(turret.ConfigId);
+
+            if (turret.Cooldown > 0f) {
+                turret.Cooldown -= dt;
+            }
+
+            if (turret.TargetEntityId == 0) {
+                continue;
+            }
+
+            if (!fr.TryGetEntityPositionAndTeam(turret.TargetEntityId, out var targetPosition, out _)) {
+                continue;
+            }
+
+            var inRange = (targetPosition - turret.Position).sqrMagnitude <= config.attackRange * config.attackRange;
+            var direction = (targetPosition - turret.Position).normalized;
+            if (config.rotateToTarget)
+                turret.Rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            else
+                turret.Rotation = 0f;
+            if (!inRange || turret.Cooldown > 0f) {
+                continue;
+            }
+
+            var projectilePosition = UnitColliderUtility.ToWorldPoint(
+                config.projectilePosition,
+                turret.Position,
+                UnitColliderUtility.IsMirrored(turret.Team == Team.Left ? UnitDirection.Right : UnitDirection.Left));
+            var projConfig = fr.FindConfig<ProjectileConfig>(config.projectileId);
+            var state = new ProjectileState {
+                Id = fr.GenerateEntityId(),
+                ConfigId = projConfig.id,
+                Team = turret.Team,
+                SourceEntityId = turret.Id,
+                TargetEntityId = turret.TargetEntityId,
+                Damage = config.damage,
+                Position = projectilePosition,
+                Direction = direction,
+                Speed = projConfig.speed,
+                Lifetime = 10f
+            };
+
+            fr.AddProjectile(state);
+            turret.Cooldown = config.attackInterval > 0f ? config.attackInterval : 1f;
         }
-    }
-
-    private static void SpawnProjectile(
-        Frame fr,
-        Team team,
-        int sourceEntityId,
-        int targetEntityId,
-        Vector2 position,
-        Vector2 direction,
-        int damage,
-        float speed
-    ) {
-        var state = new ProjectileState {
-            Id = fr.GenerateEntityId(),
-            Team = team,
-            SourceEntityId = sourceEntityId,
-            TargetEntityId = targetEntityId,
-            Damage = damage,
-            Position = position,
-            Direction = direction,
-            Speed = speed,
-            Lifetime = 5f
-        };
-
-        fr.AddProjectile(state);
     }
 }

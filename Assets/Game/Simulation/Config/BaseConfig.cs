@@ -8,8 +8,10 @@ public sealed class BaseConfig : ScriptableObject, EntityConfig {
     public int incomePerSecond;
     public int upgradeCost;
     public int healthPerUpgrade;
-    public Vector4 bounds;
-    public Vector2[] slotPositions;
+    [Baked] public Vector2 colliderSize;
+    [Baked] public Vector2 colliderOffset;
+    [Baked] public Vector2[] slotPositions;
+    [Baked] public GameObject prefab;
 
     private void OnValidate() {
         id = ConfigId.ForObject(this);

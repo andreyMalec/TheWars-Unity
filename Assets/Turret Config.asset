@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25cbbfd994e74dcaba157ba2eac3d70f, type: 3}
+  m_Name: Turret Config
+  m_EditorClassIdentifier: TheWars.Simulation::TurretConfig
+  cost: 5
+  attackRange: 3
+  attackInterval: 1
+  damage: 10
+  rotateToTarget: 1
+  projectilePrefab: {fileID: 9172579707124366618, guid: 9466c251b2ed287418a1421cf3ae8df2, type: 3}
+  projectilePosition: {x: 0.082, y: 0.017}
+  prefab: {fileID: 9172579707124366618, guid: 8cf99a8940b77de47ac586fa161d9e20, type: 3}

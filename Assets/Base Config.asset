@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1cd0ff2cb96d43f58e80d5f21f706579, type: 3}
-  m_Name: New Base Config
+  m_Name: Base Config
   m_EditorClassIdentifier: TheWars.Simulation::BaseConfig
   startHealth: 500
   startResources: 0

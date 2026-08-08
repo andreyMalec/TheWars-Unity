@@ -45,7 +45,7 @@ public class UnitConfigBaker : MonoBehaviour {
     private void OnDrawGizmos() {
         if (unitConfig == null) return;
         if (unitConfig.collider.Length == 0) return;
-        var mirrored = transform.lossyScale.x < 0f;
+        var mirrored = transform.localScale.x < 0f;
         var origin = (Vector2)transform.position;
         var rangeDirection = mirrored ? -1f : 1f;
         var projectileLocal = unitConfig.projectilePosition;

@@ -50,7 +50,7 @@ public sealed class FramePresenter : MonoBehaviour {
     private void PresentTurrets() {
         var turrets = _simulation.Frame.Turrets;
         foreach (var pair in turrets) {
-            var view = GetOrCreateTurretView(pair.Key);
+            var view = GetOrCreateTurretView(pair.Key, _simulation.Frame.FindConfig<TurretConfig>(pair.Value.ConfigId));
             view.Present(pair.Value);
         }
 
@@ -73,8 +73,8 @@ public sealed class FramePresenter : MonoBehaviour {
             return view;
         }
 
-        var viewObject = new GameObject();
-        var newView = viewObject.AddComponent<BaseView>();
+        var viewObject = Instantiate(config.prefab);
+        var newView = viewObject.GetComponent<BaseView>();
         newView.Bind(entityId, config);
         _baseViews.Add(entityId, newView);
         return newView;
@@ -92,14 +92,14 @@ public sealed class FramePresenter : MonoBehaviour {
         return newView;
     }
 
-    private TurretView GetOrCreateTurretView(int entityId) {
+    private TurretView GetOrCreateTurretView(int entityId, TurretConfig config) {
         if (_turretViews.TryGetValue(entityId, out var view)) {
             return view;
         }
 
-        var viewObject = new GameObject();
-        var newView = viewObject.AddComponent<TurretView>();
-        newView.Bind(entityId);
+        var viewObject = Instantiate(config.prefab);
+        var newView = viewObject.GetComponent<TurretView>();
+        newView.Bind(entityId, config);
         _turretViews.Add(entityId, newView);
         return newView;
     }
