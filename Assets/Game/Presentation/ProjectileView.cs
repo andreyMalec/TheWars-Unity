@@ -12,7 +12,7 @@ public sealed class ProjectileView : MonoBehaviour
 
     public void Present(ProjectileState state)
     {
-        transform.position = new Vector3(state.Position.x, 0f, state.Position.y);
+        transform.position = new Vector3(state.Position.x, state.Position.y, 0f);
     }
 
     private void OnDrawGizmos() {

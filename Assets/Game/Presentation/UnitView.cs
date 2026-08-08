@@ -6,10 +6,8 @@ public sealed class UnitView : MonoBehaviour {
     public UnitConfig unitConfig;
     private SpriteRenderer _renderer;
 
-    private Vector2 _position;
-
     private void Awake() {
-        _renderer = GetComponent<SpriteRenderer>();
+        _renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     public void Bind(int entityId, UnitConfig config) {
@@ -19,10 +17,9 @@ public sealed class UnitView : MonoBehaviour {
     }
 
     public void Present(UnitState state) {
-        if (!Mathf.Approximately(state.Position.x, _position.x))
-            _renderer.flipX = state.Position.x < _position.x;
+        var scaleX = state.Direction == UnitDirection.Left ? -1f : 1f;
+        transform.localScale = new Vector3(scaleX, 1f, 1f);
 
         transform.position = new Vector3(state.Position.x, state.Position.y, 0f);
-        _position = state.Position;
     }
 }

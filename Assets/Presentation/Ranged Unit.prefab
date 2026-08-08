@@ -25,13 +25,13 @@ Transform:
   m_GameObject: {fileID: 2803348474428962328}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0688, y: 0.0761, z: 0}
+  m_LocalPosition: {x: 0.218, y: 0.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7640560802439612021}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &9172579707124366618
+--- !u!1 &6545573269696437308
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -39,42 +39,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7640560802439612021}
-  - component: {fileID: 2423600918653618034}
-  - component: {fileID: 4727708913288788141}
-  - component: {fileID: 9019248233585862377}
-  - component: {fileID: 8685639325986157679}
+  - component: {fileID: 5074436407814586085}
+  - component: {fileID: 3210360882557349748}
   m_Layer: 0
-  m_Name: Ranged Unit
+  m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7640560802439612021
+--- !u!4 &5074436407814586085
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9172579707124366618}
+  m_GameObject: {fileID: 6545573269696437308}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3005901849826075014}
-  m_Father: {fileID: 0}
+  m_Children: []
+  m_Father: {fileID: 7640560802439612021}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &2423600918653618034
+--- !u!212 &3210360882557349748
 SpriteRenderer:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9172579707124366618}
+  m_GameObject: {fileID: 6545573269696437308}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -127,6 +123,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!1 &9172579707124366618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7640560802439612021}
+  - component: {fileID: 4727708913288788141}
+  - component: {fileID: 9019248233585862377}
+  - component: {fileID: 8685639325986157679}
+  m_Layer: 0
+  m_Name: Ranged Unit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7640560802439612021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9172579707124366618}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3005901849826075014}
+  - {fileID: 5074436407814586085}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!60 &4727708913288788141
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -173,12 +205,12 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.049035683, y: 0.16966133}
-      - {x: -0.0668998, y: -0.12413825}
-      - {x: -0.043822397, y: -0.16749126}
-      - {x: 0.069286145, y: -0.16693999}
-      - {x: 0.05186641, y: -0.012105629}
-      - {x: 0.054559875, y: 0.16962671}
+    - - {x: 0.022272736, y: 0.55136424}
+      - {x: -0.13969415, y: 0.42356226}
+      - {x: -0.19960397, y: -0.45583582}
+      - {x: 0.19005865, y: -0.45265386}
+      - {x: 0.12700197, y: -0.21978039}
+      - {x: 0.16196674, y: 0.35674435}
   m_UseDelaunayMesh: 1
 --- !u!114 &9019248233585862377
 MonoBehaviour:
@@ -194,6 +226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: TheWars.Presentation::UnitView
   EntityId: 0
   unitConfig: {fileID: 11400000, guid: 99c142c33d6ab124f8a40ffe7867f5c3, type: 2}
+  direction: 0
 --- !u!114 &8685639325986157679
 MonoBehaviour:
   m_ObjectHideFlags: 0

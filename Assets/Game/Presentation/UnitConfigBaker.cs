@@ -9,23 +9,26 @@ public class UnitConfigBaker : MonoBehaviour {
     [SerializeField] [ShowIf("_ranged")] private Transform projectilePosition;
 
     private bool _ranged;
+    private UnitView _view;
+
+    private void Awake() {
+        _view = GetComponent<UnitView>();
+    }
 
     private void OnValidate() {
         _ranged = unitConfig?.type == UnitAttackType.Ranged;
-        var view = GetComponent<UnitView>();
-        if (view == null) return;
+        if (_view == null) return;
         if (unitConfig == null) return;
-        view.unitConfig = unitConfig;
+        _view.unitConfig = unitConfig;
 
         var thisPrefab = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObject);
         if (string.IsNullOrEmpty(thisPrefab)) return;
-        Debug.Log($"[UnitConfigBaker] Baked unit config for {view.gameObject.name} ({thisPrefab})");
+        Debug.Log($"[UnitConfigBaker] Baked unit config for {_view.gameObject.name} ({thisPrefab})");
         unitConfig.prefab = AssetDatabase.LoadAssetAtPath<GameObject>(thisPrefab);
     }
 
     [Button]
     private void BakeConfigs() {
-        var view = GetComponent<UnitView>();
         var collider = GetComponent<PolygonCollider2D>();
         var points = collider.points;
         unitConfig.collider = points;
@@ -36,40 +39,55 @@ public class UnitConfigBaker : MonoBehaviour {
         unitConfig.colliderBox[1] = new Vector2(sortedX.Last().x, sortedY.Last().y);
         collider.enabled = false;
 
-        if (_ranged)
-            unitConfig.projectilePosition = projectilePosition.localPosition;
+        unitConfig.projectilePosition = _ranged ? projectilePosition.localPosition : Vector2.zero;
     }
 
     private void OnDrawGizmos() {
         if (unitConfig == null) return;
         if (unitConfig.collider.Length == 0) return;
+        var mirrored = transform.lossyScale.x < 0f;
+        var origin = (Vector2)transform.position;
+        var rangeDirection = mirrored ? -1f : 1f;
+        var projectileLocal = unitConfig.projectilePosition;
+        var projectileStart = UnitColliderUtility.ToWorldPoint(projectileLocal, origin, mirrored);
+
+        Gizmos.color = Color.deepSkyBlue;
+        Gizmos.DrawLine(
+            new Vector3(projectileStart.x, projectileStart.y, 0f),
+            new Vector3(projectileStart.x + unitConfig.attackRange * rangeDirection, projectileStart.y, 0f));
 
         Gizmos.color = Color.red;
         for (int i = 0; i < unitConfig.collider.Length - 1; i++) {
-            var point1 = unitConfig.collider[i];
-            var point2 = unitConfig.collider[i + 1];
-            Gizmos.DrawLine(transform.position + new Vector3(point1.x, point1.y, 0),
-                transform.position + new Vector3(point2.x, point2.y, 0));
+            var point1 = UnitColliderUtility.ToWorldPoint(unitConfig.collider[i], origin, mirrored);
+            var point2 = UnitColliderUtility.ToWorldPoint(unitConfig.collider[i + 1], origin, mirrored);
+            Gizmos.DrawLine(new Vector3(point1.x, point1.y, 0f), new Vector3(point2.x, point2.y, 0f));
         }
 
+        var lastPoint = UnitColliderUtility.ToWorldPoint(unitConfig.collider[unitConfig.collider.Length - 1], origin, mirrored);
+        var firstPoint = UnitColliderUtility.ToWorldPoint(unitConfig.collider[0], origin, mirrored);
         Gizmos.DrawLine(
-            transform.position + new Vector3(unitConfig.collider[unitConfig.collider.Length - 1].x,
-                unitConfig.collider[unitConfig.collider.Length - 1].y, 0f),
-            transform.position + new Vector3(unitConfig.collider[0].x, unitConfig.collider[0].y, 0f));
+            new Vector3(lastPoint.x, lastPoint.y, 0f),
+            new Vector3(firstPoint.x, firstPoint.y, 0f));
 
 
         Gizmos.color = new Color(1f, 0.0f, 0.0f, .25f);
+        var boxMin = UnitColliderUtility.ToWorldPoint(unitConfig.colliderBox[0], origin, mirrored);
+        var boxMax = UnitColliderUtility.ToWorldPoint(unitConfig.colliderBox[1], origin, mirrored);
+        var minX = Mathf.Min(boxMin.x, boxMax.x);
+        var maxX = Mathf.Max(boxMin.x, boxMax.x);
+        var minY = Mathf.Min(boxMin.y, boxMax.y);
+        var maxY = Mathf.Max(boxMin.y, boxMax.y);
         Gizmos.DrawLine(
-            transform.position + new Vector3(unitConfig.colliderBox[0].x, unitConfig.colliderBox[0].y, 0f),
-            transform.position + new Vector3(unitConfig.colliderBox[0].x, unitConfig.colliderBox[1].y, 0f));
+            new Vector3(minX, minY, 0f),
+            new Vector3(minX, maxY, 0f));
         Gizmos.DrawLine(
-            transform.position + new Vector3(unitConfig.colliderBox[1].x, unitConfig.colliderBox[0].y, 0f),
-            transform.position + new Vector3(unitConfig.colliderBox[1].x, unitConfig.colliderBox[1].y, 0f));
+            new Vector3(maxX, minY, 0f),
+            new Vector3(maxX, maxY, 0f));
         Gizmos.DrawLine(
-            transform.position + new Vector3(unitConfig.colliderBox[0].x, unitConfig.colliderBox[0].y, 0f),
-            transform.position + new Vector3(unitConfig.colliderBox[1].x, unitConfig.colliderBox[0].y, 0f));
+            new Vector3(minX, minY, 0f),
+            new Vector3(maxX, minY, 0f));
         Gizmos.DrawLine(
-            transform.position + new Vector3(unitConfig.colliderBox[1].x, unitConfig.colliderBox[1].y, 0f),
-            transform.position + new Vector3(unitConfig.colliderBox[0].x, unitConfig.colliderBox[1].y, 0f));
+            new Vector3(maxX, maxY, 0f),
+            new Vector3(minX, maxY, 0f));
     }
 }

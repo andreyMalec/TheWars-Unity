@@ -26,11 +26,15 @@ public sealed class SpawnSystem : ISystem {
                 Team = request.Team,
                 ConfigId = request.UnitConfigId,
                 Position = request.Position,
-                Size = 1,//config.size,
+                Direction = UnitDirection.Right,
                 Health = config.maxHealth,
+                MaxHealth = config.maxHealth,
                 TargetEntityId = 0,
                 Cooldown = 0f
             };
+
+            var targetPosition = fr.GetEnemyBasePosition(state);
+            state.Direction = UnitColliderUtility.ResolveDirection(state.Direction, targetPosition.x - state.Position.x);
 
             fr.AddUnit(state);
             Debug.Log(

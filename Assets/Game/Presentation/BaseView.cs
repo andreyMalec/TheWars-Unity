@@ -11,7 +11,7 @@ public sealed class BaseView : MonoBehaviour {
     }
 
     public void Present(BaseState state) {
-        transform.position = new Vector3(state.Position.x, 0f, state.Position.y);
+        transform.position = new Vector3(state.Position.x, state.Position.y, 0f);
     }
 
     private void OnDrawGizmos() {

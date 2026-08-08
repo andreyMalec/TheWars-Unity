@@ -68,7 +68,6 @@ public sealed class FramePresenter : MonoBehaviour {
         }
 
         var viewObject = new GameObject();
-        viewObject.transform.SetParent(transform, false);
         var newView = viewObject.AddComponent<BaseView>();
         newView.Bind(entityId, baseConfig);
         _baseViews.Add(entityId, newView);
@@ -80,7 +79,7 @@ public sealed class FramePresenter : MonoBehaviour {
             return view;
         }
 
-        var viewObject = Instantiate(unitConfig.prefab, transform, false);
+        var viewObject = Instantiate(unitConfig.prefab);
         var newView = viewObject.GetComponent<UnitView>();
         newView.Bind(entityId, unitConfig);
         _unitViews.Add(entityId, newView);
@@ -93,7 +92,6 @@ public sealed class FramePresenter : MonoBehaviour {
         }
 
         var viewObject = new GameObject();
-        viewObject.transform.SetParent(transform, false);
         var newView = viewObject.AddComponent<TurretView>();
         newView.Bind(entityId);
         _turretViews.Add(entityId, newView);
@@ -106,7 +104,6 @@ public sealed class FramePresenter : MonoBehaviour {
         }
 
         var viewObject = new GameObject();
-        viewObject.transform.SetParent(transform, false);
         var newView = viewObject.AddComponent<ProjectileView>();
         newView.Bind(entityId);
         _projectileViews.Add(entityId, newView);

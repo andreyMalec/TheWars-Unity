@@ -27,8 +27,23 @@ public sealed class WeaponSystem : ISystem {
 
             if (config.type == UnitAttackType.Ranged) {
                 var direction = (targetPosition - unit.Position).normalized;
-                SpawnProjectile(fr, unit.Team, unit.Id, unit.TargetEntityId, unit.Position, direction, config.damage,
-                    config.projectileSpeed);
+                var projectilePosition = UnitColliderUtility.ToWorldPoint(
+                    config.projectilePosition,
+                    unit.Position,
+                    UnitColliderUtility.IsMirrored(unit.Direction));
+                var state = new ProjectileState {
+                    Id = fr.GenerateEntityId(),
+                    Team = unit.Team,
+                    SourceEntityId = unit.Id,
+                    TargetEntityId = unit.TargetEntityId,
+                    Damage = config.damage,
+                    Position = projectilePosition,
+                    Direction = direction,
+                    Speed = config.projectileSpeed,
+                    Lifetime = 5f
+                };
+
+                fr.AddProjectile(state);
             } else {
                 s.DamageRequests.Enqueue(new DamageRequest {
                     SourceEntityId = unit.Id,

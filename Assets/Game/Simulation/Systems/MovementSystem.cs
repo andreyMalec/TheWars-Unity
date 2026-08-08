@@ -9,6 +9,18 @@ public sealed class MovementSystem : ISystem {
         var sortedIds = new List<int>(fr.Units.Keys);
         sortedIds.Sort();
 
+        var unitRadii = new Dictionary<int, float>(sortedIds.Count);
+        var unitColliders = new Dictionary<int, Vector2[]>(sortedIds.Count);
+        var unitDirections = new Dictionary<int, UnitDirection>(sortedIds.Count);
+        for (var i = 0; i < sortedIds.Count; i++) {
+            var id = sortedIds[i];
+            var state = fr.Units[id];
+            var config = fr.FindConfig<UnitConfig>(state.ConfigId);
+            unitRadii[id] = UnitColliderUtility.GetRadius(config);
+            unitColliders[id] = config.collider;
+            unitDirections[id] = state.Direction;
+        }
+
         var startPositions = new Dictionary<int, Vector2>(sortedIds.Count);
         for (var i = 0; i < sortedIds.Count; i++) {
             var id = sortedIds[i];
@@ -24,8 +36,11 @@ public sealed class MovementSystem : ISystem {
 
             var targetPosition = fr.GetEnemyBasePosition(state);
             var desired = CalculateDesiredPosition(state.Position, targetPosition, config.speed, dt, StopRange);
+            var direction = UnitColliderUtility.ResolveDirection(state.Direction, desired.x - state.Position.x);
+            state.Direction = direction;
+            unitDirections[id] = direction;
 
-            if (CanMoveTo(s, fr, state.Team, state.Position, desired, id, state.Size, sortedIds, startPositions,
+            if (CanMoveTo(fr, state.Team, state.Position, desired, id, unitRadii[id], unitColliders[id], direction, sortedIds, unitRadii, unitColliders, unitDirections, startPositions,
                     resolvedPositions)) {
                 state.Position = desired;
             }
@@ -35,24 +50,28 @@ public sealed class MovementSystem : ISystem {
     }
 
     private static bool CanMoveTo(
-        Simulation simulation,
         Frame frame,
         int unitTeam,
         Vector2 currentPosition,
         Vector2 desiredPosition,
         int unitId,
-        float unitSize,
+        float unitRadius,
+        Vector2[] unitCollider,
+        UnitDirection unitDirection,
         List<int> sortedIds,
+        Dictionary<int, float> unitRadii,
+        Dictionary<int, Vector2[]> unitColliders,
+        Dictionary<int, UnitDirection> unitDirections,
         Dictionary<int, Vector2> startPositions,
         Dictionary<int, Vector2> resolvedPositions
     ) {
-        if (IsBlockedByEnemyBaseBounds(simulation, frame, unitTeam, currentPosition, desiredPosition)) {
+        if (IsBlockedByEnemyBaseBounds(frame, unitTeam, currentPosition, desiredPosition)) {
             return false;
         }
 
         var movementDirection = desiredPosition - currentPosition;
         var hasMovement = movementDirection.sqrMagnitude > 0.000001f;
-        var radius = unitSize * 0.5f;
+        var radius = unitRadius;
 
         for (var i = 0; i < sortedIds.Count; i++) {
             var otherId = sortedIds[i];
@@ -71,9 +90,22 @@ public sealed class MovementSystem : ISystem {
                 }
             }
 
-            var otherRadius = frame.Units[otherId].Size * 0.5f;
+            var otherRadius = unitRadii[otherId];
             var minDistance = radius + otherRadius;
-            if ((desiredPosition - otherPosition).sqrMagnitude < minDistance * minDistance) {
+            if ((desiredPosition - otherPosition).sqrMagnitude >= minDistance * minDistance) {
+                continue;
+            }
+
+            var otherCollider = unitColliders[otherId];
+            var otherDirection = unitDirections[otherId];
+            if (UnitColliderUtility.PolygonsOverlap(
+                    unitCollider,
+                    desiredPosition,
+                    UnitColliderUtility.IsMirrored(unitDirection),
+                    otherCollider,
+                    otherPosition,
+                    UnitColliderUtility.IsMirrored(otherDirection)
+                )) {
                 return false;
             }
         }
@@ -82,7 +114,6 @@ public sealed class MovementSystem : ISystem {
     }
 
     private static bool IsBlockedByEnemyBaseBounds(
-        Simulation simulation,
         Frame frame,
         int unitTeam,
         Vector2 currentPosition,
@@ -94,7 +125,7 @@ public sealed class MovementSystem : ISystem {
                 continue;
             }
 
-            var baseConfig = frame.FindConfig<BaseConfig>(baseState.ConfigId);;
+            var baseConfig = frame.FindConfig<BaseConfig>(baseState.ConfigId);
             if (BaseBoundsUtility.ContainsPoint(baseState, baseConfig, currentPosition)) {
                 continue;
             }

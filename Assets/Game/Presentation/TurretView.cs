@@ -12,7 +12,7 @@ public sealed class TurretView : MonoBehaviour
 
     public void Present(TurretState state)
     {
-        transform.position = new Vector3(state.Position.x, 0f, state.Position.y);
+        transform.position = new Vector3(state.Position.x, state.Position.y, 0f);
     }
 }
 

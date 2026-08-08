@@ -130,7 +130,8 @@ public sealed class Frame {
         if (Units.TryGetValue(entityId, out var unit)) {
             position = unit.Position;
             team = unit.Team;
-            radius = unit.Size * 0.5f;
+            var config = FindConfig<UnitConfig>(unit.ConfigId);
+            radius = UnitColliderUtility.GetRadius(config);
             return true;
         }
 

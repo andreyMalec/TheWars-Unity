@@ -36,6 +36,7 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig {
     private void OnValidate() {
         _ranged = type == UnitAttackType.Ranged;
         id = ConfigId.ForObject(this);
-        attackRange = Mathf.Max(0, attackRange);
+        var radii = UnitColliderUtility.GetRadius(this);
+        attackRange = Mathf.Max(radii, attackRange);
     }
 }
