@@ -25,7 +25,7 @@ public sealed class WeaponSystem : ISystem {
                 continue;
             }
 
-            if (config.type == UnitAttackType.Ranged) {
+            if (config.attackType == UnitAttackType.Ranged) {
                 var direction = (targetPosition - unit.Position).normalized;
                 var projectilePosition = UnitColliderUtility.ToWorldPoint(
                     config.projectilePosition,

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public sealed class SpawnSystem : ISystem {
@@ -10,8 +11,18 @@ public sealed class SpawnSystem : ISystem {
         if (!fr.TryFindBaseByTeam(team, out var baseState)) return;
         var baseConfig = fr.FindConfig<BaseConfig>(baseState.ConfigId);
 
-        while (queue.Count(team) > 0) {
-            var request = queue.Peek(team);
+        foreach (UnitType unitType in Enum.GetValues(typeof(UnitType))) {
+            SpawnUnitType(fr, queue, baseConfig, baseState, unitType);
+        }
+    }
+
+    private void SpawnUnitType(
+        Frame fr, SpawnQueue queue,
+        BaseConfig baseConfig, BaseState baseState, UnitType unitType
+    ) {
+        var team = baseState.Team;
+        while (queue.Count(team, unitType) > 0) {
+            var request = queue.Peek(team, unitType);
 
             if (IsSpawnAreaOccupied(fr, baseState, baseConfig)) {
                 break;
@@ -23,23 +34,19 @@ public sealed class SpawnSystem : ISystem {
             }
 
             baseState.Resources -= config.cost;
-            queue.Dequeue(team);
+            queue.Dequeue(team, unitType);
 
             var state = new UnitState {
                 Id = fr.GenerateEntityId(),
                 Team = request.Team,
                 ConfigId = request.UnitConfigId,
-                Position = request.Position,
-                Direction = UnitDirection.Right,
+                Position = baseState.Position,
+                Direction = team == Team.Left ? UnitDirection.Right : UnitDirection.Left,
                 Health = config.maxHealth,
                 MaxHealth = config.maxHealth,
                 TargetEntityId = 0,
                 Cooldown = 0f
             };
-
-            var targetPosition = fr.GetEnemyBasePosition(state);
-            state.Direction =
-                UnitColliderUtility.ResolveDirection(state.Direction, targetPosition.x - state.Position.x);
 
             fr.AddUnit(state);
             Debug.Log(

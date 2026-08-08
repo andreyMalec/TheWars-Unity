@@ -11,7 +11,7 @@ public class UnitConfigBaker : MonoBehaviour {
     private bool _ranged;
 
     private void OnValidate() {
-        _ranged = unitConfig?.type == UnitAttackType.Ranged;
+        _ranged = unitConfig?.attackType == UnitAttackType.Ranged;
         if (unitConfig == null) return;
 
         var thisPrefab = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObject);

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0ab2196dc34122b9f9a3fe5e9bd161, type: 3}
   m_Name: Melee Unit
   m_EditorClassIdentifier: TheWars.Simulation::UnitConfig
-  type: 0
+  unitType: 0
+  attackType: 0
   cost: 10
   maxHealth: 100
   speed: 1

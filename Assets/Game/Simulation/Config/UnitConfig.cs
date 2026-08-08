@@ -8,10 +8,18 @@ public enum UnitAttackType {
     Ranged
 }
 
+public enum UnitType {
+    Type1,
+    Type2,
+    Type3,
+    Type4
+}
+
 [CreateAssetMenu(menuName = "Game/Config/Unit Config")]
 public sealed class UnitConfig : ScriptableObject, EntityConfig {
     public ConfigId id { get; private set; }
-    public UnitAttackType type;
+    public UnitType unitType;
+    public UnitAttackType attackType;
     public int cost;
     public int maxHealth;
 
@@ -36,7 +44,7 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig {
     private bool _ranged;
 
     private void OnValidate() {
-        _ranged = type == UnitAttackType.Ranged;
+        _ranged = attackType == UnitAttackType.Ranged;
         id = ConfigId.ForObject(this);
         var radii = UnitColliderUtility.GetRadius(this);
         attackRange = Mathf.Max(radii, attackRange);

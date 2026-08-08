@@ -2,42 +2,45 @@ using System;
 using System.Collections.Generic;
 
 public sealed class SpawnQueue {
-    private readonly Queue<SpawnUnitRequest> _pendingLeft = new Queue<SpawnUnitRequest>();
-    private readonly Queue<SpawnUnitRequest> _pendingRight = new Queue<SpawnUnitRequest>();
+    private readonly Dictionary<UnitType, Queue<SpawnUnitRequest>> _pendingLeft = new();
+    private readonly Dictionary<UnitType, Queue<SpawnUnitRequest>> _pendingRight = new();
+
+    public SpawnQueue() {
+        foreach (UnitType unitType in Enum.GetValues(typeof(UnitType))) {
+            _pendingLeft[unitType] = new Queue<SpawnUnitRequest>();
+            _pendingRight[unitType] = new Queue<SpawnUnitRequest>();
+        }
+    }
 
     public void Enqueue(SpawnUnitRequest request) {
         if (request.Team == Team.Left) {
-            _pendingLeft.Enqueue(request);
+            _pendingLeft[request.UnitType].Enqueue(request);
         } else if (request.Team == Team.Right) {
-            _pendingRight.Enqueue(request);
+            _pendingRight[request.UnitType].Enqueue(request);
         }
     }
 
-    public int Count() {
-        return _pendingLeft.Count + _pendingRight.Count;
-    }
-
-    public int Count(Team team) {
+    public int Count(Team team, UnitType unitType) {
         if (team == Team.Left) {
-            return _pendingLeft.Count;
+            return _pendingLeft[unitType].Count;
         } else {
-            return _pendingRight.Count;
+            return _pendingRight[unitType].Count;
         }
     }
 
-    public SpawnUnitRequest Peek(Team team) {
+    public SpawnUnitRequest Peek(Team team, UnitType unitType) {
         if (team == Team.Left) {
-            return _pendingLeft.Peek();
+            return _pendingLeft[unitType].Peek();
         } else {
-            return _pendingRight.Peek();
+            return _pendingRight[unitType].Peek();
         }
     }
 
-    public SpawnUnitRequest Dequeue(Team team) {
+    public SpawnUnitRequest Dequeue(Team team, UnitType unitType) {
         if (team == Team.Left) {
-            return _pendingLeft.Dequeue();
+            return _pendingLeft[unitType].Dequeue();
         } else {
-            return _pendingRight.Dequeue();
+            return _pendingRight[unitType].Dequeue();
         }
     }
 }
