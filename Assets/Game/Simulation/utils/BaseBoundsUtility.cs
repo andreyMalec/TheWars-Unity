@@ -55,7 +55,7 @@ public static class BaseBoundsUtility {
     }
 //TODO
     private static void GetWorldBounds(BaseState baseState, BaseConfig baseConfig, out Vector2 min, out Vector2 max) {
-        var local = baseConfig.Bounds;
+        var local = baseConfig.bounds;
         var localMin = new Vector2(Mathf.Min(local.x, local.z), Mathf.Min(local.y, local.w));
         var localMax = new Vector2(Mathf.Max(local.x, local.z), Mathf.Max(local.y, local.w));
         var origin = baseState.Position;

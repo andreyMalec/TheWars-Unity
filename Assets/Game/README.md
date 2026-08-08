@@ -1,24 +1,37 @@
-# Game Layer Bootstrap (Phases 1-14)
+## Base
 
-Implemented foundation for `ARCHITECTURE.md` and first fourteen phases from `PLAN.md`:
+- единственный экземпляр
+- улучшение
+- открытие слотов
+- строительство турели в слоте
+- удаление турели из слота
 
-- Bootstrap pipeline that creates and ticks simulation.
-- Pure simulation core (`Frame`, `World`, `Simulation`, `TickManager`).
-- Runtime state entities (`BaseState`, `UnitState`, `TurretState`, `ProjectileState`).
-- Static config layer via `ScriptableObject` configs + `ConfigDatabase`.
-- Command queue + commands (`SpawnUnit`, `BuildTurret`, `UpgradeBase`).
-- Tick systems for economy, spawning, movement, targeting, weapon, projectile, damage and death.
-- Presentation layer (`FramePresenter` + `BaseView`/`UnitView`/`TurretView`/`ProjectileView`) that only reads `Frame`.
+## Unit
 
-## Quick setup in Unity
+- спавн
+- движение по прямой
+- остановка при препятствии
+- дальность атаки
+- определение цели
+- (ближнебойные) нанесение урона
+- (дальнобойные) спавн снадярядов
+- смерть
 
-1. Create a `ConfigDatabase` asset via `Create/Game/Config Database`.
-2. Add `GameStartup` component to a startup scene object.
-3. Assign the `ConfigDatabase` asset in `GameStartup`.
-4. Configure `initialBaseConfigIds`, `initialBaseTeams` and `initialBasePositions` in `GameStartup`.
-5. Press Play.
+## Turret
 
-`GameStartup` creates `SimulationRunner` and `FramePresenter`.
+- спавн
+- дальность атаки
+- определение цели
+- (опционально) поворот к цели
+- спавн снарядов
 
-`SimulationRunner` advances deterministic ticks in `FixedUpdate`, while `FramePresenter` visualizes simulation state in `LateUpdate`.
+## Projectile
+
+- спавн
+- движение
+    - по прямой
+    - к цели
+    - по баллистической траектории
+- (опционально) поворот к цели
+- нанесение урона
 

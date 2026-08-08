@@ -7,17 +7,19 @@ public sealed class BuildSystem : ISystem {
             }
 
             var config = fr.FindConfig<TurretConfig>(request.TurretConfigId);
-            if (baseState.Resources < config.Cost) {
+            if (baseState.Resources < config.cost) {
                 continue;
             }
 
-            baseState.Resources -= config.Cost;
+            var baseConfig = fr.FindConfig<BaseConfig>(baseState.ConfigId);
+            baseState.Resources -= config.cost;
 
             var state = new TurretState {
                 Id = fr.GenerateEntityId(),
                 Team = request.Team,
                 ConfigId = request.TurretConfigId,
-                Position = request.Position,
+                Position = baseConfig.slotPositions[(int)request.Slot],
+                Slot = request.Slot,
                 TargetEntityId = 0,
                 Cooldown = 0f
             };

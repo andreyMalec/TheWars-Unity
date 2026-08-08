@@ -178,4 +178,8 @@ public sealed class Frame {
         TargetingUtility.FindNearestEnemy(this, team, origin, out var damageable);
         return damageable?.Id ?? 0;
     }
+
+    public Team LocalPlayerTeam() {
+        return Team.Left;
+    }
 }

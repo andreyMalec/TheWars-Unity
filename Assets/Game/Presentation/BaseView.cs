@@ -19,8 +19,8 @@ public sealed class BaseView : MonoBehaviour {
             return;
         }
 
-        var w = _baseConfig.Bounds.z - _baseConfig.Bounds.x;
-        var h = _baseConfig.Bounds.w - _baseConfig.Bounds.y;
+        var w = _baseConfig.bounds.z - _baseConfig.bounds.x;
+        var h = _baseConfig.bounds.w - _baseConfig.bounds.y;
         Gizmos.color = Color.white;
         Gizmos.DrawWireCube(transform.position, new Vector3(w, h, 1f));
     }

@@ -12,7 +12,7 @@ public sealed class EconomySystem : ISystem {
         foreach (var pair in fr.Bases) {
             var state = pair.Value;
             var config = fr.FindConfig<BaseConfig>(state.ConfigId);
-            state.Resources += config.IncomePerSecond;
+            state.Resources += config.incomePerSecond;
             // Debug.Log(
             //     $"[EconomySystem] Base (Team {state.Team}) generated {config.IncomePerTick} resources. Total: {state.Resources}");
         }

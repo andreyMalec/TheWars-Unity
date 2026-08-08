@@ -2,6 +2,7 @@ using UnityEngine;
 
 [DefaultExecutionOrder(-10000)]
 public sealed class GameStartup : MonoBehaviour {
+    [SerializeField] private GameObject playerUiPrefab;
     [SerializeField] private ConfigDatabase configDatabase;
     [SerializeField] private int tickRate = 60;
     [SerializeField] private Vector2[] initialBasePositions = { new Vector2(-8f, 0f), new Vector2(8f, 0f) };
@@ -15,8 +16,16 @@ public sealed class GameStartup : MonoBehaviour {
         var runner = gameObject.AddComponent<SimulationRunner>();
         runner.Initialize(compositionRoot.Simulation, compositionRoot.TickManager);
 
+        var playerCommandProcessor = new PlayerCommandProcessor(compositionRoot.Simulation);
+        var playerUi = Instantiate(playerUiPrefab);
+        var playerInputController = playerUi.GetComponent<PlayerInputController>();
+        playerInputController.Initialize(playerCommandProcessor);
+
+        var playerUiView = playerUi.GetComponent<PlayerUiView>();
+        playerUiView.Bind(configDatabase);
+
         var presenter = gameObject.AddComponent<FramePresenter>();
-        presenter.Initialize(compositionRoot.Simulation);
+        presenter.Initialize(compositionRoot.Simulation, playerUiView);
 
         DontDestroyOnLoad(gameObject);
     }
@@ -31,9 +40,9 @@ public sealed class GameStartup : MonoBehaviour {
                 Team = (Team)i,
                 ConfigId = config.id,
                 Position = initialBasePositions[i],
-                Health = config.StartHealth,
+                Health = config.startHealth,
                 Level = 1,
-                Resources = config.StartResources
+                Resources = config.startResources
             };
 
             simulation.Frame.AddBase(state);

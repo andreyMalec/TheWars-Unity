@@ -58,31 +58,31 @@ public sealed class WeaponSystem : ISystem {
         }
 
         foreach (var pair in fr.Turrets) {
-            var turret = pair.Value;
-            var config = fr.FindConfig<TurretConfig>(turret.ConfigId);
-
-            if (turret.Cooldown > 0f) {
-                turret.Cooldown -= dt;
-            }
-
-            if (turret.TargetEntityId == 0) {
-                continue;
-            }
-
-            if (!fr.TryGetEntityPositionAndTeam(turret.TargetEntityId, out var targetPosition, out _)) {
-                continue;
-            }
-
-            var inRange = (targetPosition - turret.Position).sqrMagnitude <= config.AttackRange * config.AttackRange;
-            if (!inRange || turret.Cooldown > 0f) {
-                continue;
-            }
-
-            var direction = (targetPosition - turret.Position).normalized;
-            SpawnProjectile(fr, turret.Team, turret.Id, turret.TargetEntityId, turret.Position, direction,
-                config.Damage,
-                config.ProjectileSpeed);
-            turret.Cooldown = config.AttackInterval > 0f ? config.AttackInterval : 1f;
+            // var turret = pair.Value; TODO
+            // var config = fr.FindConfig<TurretConfig>(turret.ConfigId);
+            //
+            // if (turret.Cooldown > 0f) {
+            //     turret.Cooldown -= dt;
+            // }
+            //
+            // if (turret.TargetEntityId == 0) {
+            //     continue;
+            // }
+            //
+            // if (!fr.TryGetEntityPositionAndTeam(turret.TargetEntityId, out var targetPosition, out _)) {
+            //     continue;
+            // }
+            //
+            // var inRange = (targetPosition - turret.Position).sqrMagnitude <= config.AttackRange * config.AttackRange;
+            // if (!inRange || turret.Cooldown > 0f) {
+            //     continue;
+            // }
+            //
+            // var direction = (targetPosition - turret.Position).normalized;
+            // SpawnProjectile(fr, turret.Team, turret.Id, turret.TargetEntityId, turret.Position, direction,
+            //     config.Damage,
+            //     config.ProjectileSpeed);
+            // turret.Cooldown = config.AttackInterval > 0f ? config.AttackInterval : 1f;
         }
     }
 

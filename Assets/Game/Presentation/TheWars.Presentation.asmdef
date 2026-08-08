@@ -3,6 +3,7 @@
   "rootNamespace": "",
   "references": [
     "TheWars.Simulation",
+    "Unity.TextMeshPro",
     "NaughtyAttributes.Core"
   ],
   "includePlatforms": [],

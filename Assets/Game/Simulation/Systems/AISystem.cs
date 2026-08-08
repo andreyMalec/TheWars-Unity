@@ -8,11 +8,11 @@ public sealed class AISystem : ISystem {
     }
 
     public void Run(Simulation s, Frame fr) {
-        if (fr.TryFindBaseByTeam(Team.Left, out var baseState1)) {
-            if (baseState1.Resources >= _melee.cost) {
-                s.EnqueueCommand(new SpawnUnitCommand(Team.Left, _melee));
-            }
-        }
+        // if (fr.TryFindBaseByTeam(Team.Left, out var baseState1)) {
+        //     if (baseState1.Resources >= _melee.cost) {
+        //         s.EnqueueCommand(new SpawnUnitCommand(Team.Left, _melee));
+        //     }
+        // }
 
         if (fr.TryFindBaseByTeam(Team.Right, out var baseState2)) {
             if (baseState2.Resources >= _ranged.cost) {

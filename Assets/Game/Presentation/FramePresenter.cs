@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,9 +10,11 @@ public sealed class FramePresenter : MonoBehaviour {
     private readonly List<int> _removeBuffer = new List<int>();
 
     private Simulation _simulation;
+    private PlayerUiView _uiView;
 
-    public void Initialize(Simulation simulation) {
+    public void Initialize(Simulation simulation, PlayerUiView uiView) {
         _simulation = simulation;
+        _uiView = uiView;
     }
 
     private void LateUpdate() {
@@ -27,6 +30,8 @@ public sealed class FramePresenter : MonoBehaviour {
         foreach (var pair in bases) {
             var view = GetOrCreateBaseView(pair.Key, _simulation.Frame.FindConfig<BaseConfig>(pair.Value.ConfigId));
             view.Present(pair.Value);
+            if (pair.Value.Team == _simulation.Frame.LocalPlayerTeam())
+                _uiView.Present(pair.Value);
         }
 
         CleanupMissing(_baseViews, bases);
@@ -55,7 +60,8 @@ public sealed class FramePresenter : MonoBehaviour {
     private void PresentProjectiles() {
         var projectiles = _simulation.Frame.Projectiles;
         foreach (var pair in projectiles) {
-            var view = GetOrCreateProjectileView(pair.Key, _simulation.Frame.FindConfig<ProjectileConfig>(pair.Value.ConfigId));
+            var view = GetOrCreateProjectileView(pair.Key,
+                _simulation.Frame.FindConfig<ProjectileConfig>(pair.Value.ConfigId));
             view.Present(pair.Value);
         }
 

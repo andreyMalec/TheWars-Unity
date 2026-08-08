@@ -9,11 +9,15 @@ public struct SpawnUnitRequest {
 public struct BuildTurretRequest {
     public Team Team;
     public ConfigId TurretConfigId;
-    public Vector2 Position;
+    public TurretSlot Slot;
 }
 
 public struct UpgradeBaseRequest {
-    public int BaseEntityId;
+    public Team Team;
+}
+
+public struct SpecialWeaponRequest {
+    public Team Team;
 }
 
 public struct DamageRequest {

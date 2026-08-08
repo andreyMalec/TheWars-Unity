@@ -10,13 +10,13 @@ public sealed class UnitView : MonoBehaviour {
         _renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
-    public void Bind(int entityId, UnitConfig config) {
+    public void Bind(int entityId, in UnitConfig config) {
         EntityId = entityId;
         unitConfig = config;
         name = unitConfig.name + "_" + entityId;
     }
 
-    public void Present(UnitState state) {
+    public void Present(in UnitState state) {
         var scaleX = state.Direction == UnitDirection.Left ? -1f : 1f;
         transform.localScale = new Vector3(scaleX, 1f, 1f);
 

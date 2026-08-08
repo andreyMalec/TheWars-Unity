@@ -1,12 +1,18 @@
 using UnityEngine;
 
-public sealed class TurretState
-{
+public enum TurretSlot {
+    Slot1,
+    Slot2,
+    Slot3,
+    Slot4,
+}
+
+public sealed class TurretState {
     public int Id;
     public Team Team;
     public ConfigId ConfigId;
+    public TurretSlot Slot;
     public Vector2 Position;
     public int TargetEntityId;
     public float Cooldown;
 }
-

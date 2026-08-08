@@ -3,15 +3,15 @@ public sealed class BaseUpgradeSystem : ISystem {
         while (s.UpgradeRequests.Count > 0) {
             var request = s.UpgradeRequests.Dequeue();
 
-            if (fr.TryFindBase(request.BaseEntityId, out var baseState)) {
+            if (fr.TryFindBaseByTeam(request.Team, out var baseState)) {
                 var config = fr.FindConfig<BaseConfig>(baseState.ConfigId);
-                if (baseState.Resources < config.UpgradeCost) {
+                if (baseState.Resources < config.upgradeCost) {
                     continue;
                 }
 
-                baseState.Resources -= config.UpgradeCost;
+                baseState.Resources -= config.upgradeCost;
                 baseState.Level += 1;
-                baseState.Health += config.HealthPerUpgrade;
+                baseState.Health += config.healthPerUpgrade;
             }
         }
     }

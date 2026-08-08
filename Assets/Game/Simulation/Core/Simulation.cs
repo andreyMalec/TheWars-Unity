@@ -2,18 +2,18 @@ using System.Collections.Generic;
 
 public sealed class Simulation {
     private readonly List<ISystem> _systems = new List<ISystem>();
+    private readonly CommandQueue _commandQueue = new CommandQueue();
 
     public Frame Frame { get; }
-    public CommandQueue CommandQueue { get; }
     public SpawnQueue SpawnQueue { get; }
-    public readonly Queue<BuildTurretRequest> BuildRequests = new Queue<BuildTurretRequest>();
-    public readonly Queue<UpgradeBaseRequest> UpgradeRequests = new Queue<UpgradeBaseRequest>();
-    public readonly Queue<DamageRequest> DamageRequests = new Queue<DamageRequest>();
-    public readonly Queue<int> ProjectileRemovalRequests = new Queue<int>();
+    public readonly Queue<BuildTurretRequest> BuildRequests = new();
+    public readonly Queue<UpgradeBaseRequest> UpgradeRequests = new();
+    public readonly Queue<SpecialWeaponRequest> SpecialWeaponRequests = new();
+    public readonly Queue<DamageRequest> DamageRequests = new();
+    public readonly Queue<int> ProjectileRemovalRequests = new();
 
     public Simulation(ConfigDatabase configDatabase, int tickRate) {
         Frame = new Frame(1f / tickRate, configDatabase);
-        CommandQueue = new CommandQueue();
         SpawnQueue = new SpawnQueue();
 
         _systems.Add(new EconomySystem());
@@ -34,11 +34,11 @@ public sealed class Simulation {
     }
 
     public void EnqueueCommand(ICommand command) {
-        CommandQueue.Enqueue(command);
+        _commandQueue.Enqueue(command);
     }
 
     public void Tick() {
-        CommandQueue.ExecuteAll(this);
+        _commandQueue.ExecuteAll(this);
 
         for (var i = 0; i < _systems.Count; i++) {
             _systems[i].Run(this, Frame);

@@ -1,18 +1,13 @@
-public sealed class UpgradeBaseCommand : ICommand
-{
-    private readonly int _baseEntityId;
+public sealed class UpgradeBaseCommand : ICommand {
+    private readonly Team _team;
 
-    public UpgradeBaseCommand(int baseEntityId)
-    {
-        _baseEntityId = baseEntityId;
+    public UpgradeBaseCommand(Team team) {
+        _team = team;
     }
 
-    public void Execute(Simulation simulation)
-    {
-        simulation.UpgradeRequests.Enqueue(new UpgradeBaseRequest
-        {
-            BaseEntityId = _baseEntityId
+    public void Execute(Simulation simulation) {
+        simulation.UpgradeRequests.Enqueue(new UpgradeBaseRequest {
+            Team = _team
         });
     }
 }
-
