@@ -9,22 +9,22 @@ public class UnitConfigBaker : MonoBehaviour {
     [SerializeField] [ShowIf("_ranged")] private Transform projectilePosition;
 
     private bool _ranged;
-    private UnitView _view;
-
-    private void Awake() {
-        _view = GetComponent<UnitView>();
-    }
 
     private void OnValidate() {
         _ranged = unitConfig?.type == UnitAttackType.Ranged;
-        if (_view == null) return;
         if (unitConfig == null) return;
-        _view.unitConfig = unitConfig;
 
         var thisPrefab = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObject);
         if (string.IsNullOrEmpty(thisPrefab)) return;
-        Debug.Log($"[UnitConfigBaker] Baked unit config for {_view.gameObject.name} ({thisPrefab})");
         unitConfig.prefab = AssetDatabase.LoadAssetAtPath<GameObject>(thisPrefab);
+
+        if (_ranged) {
+            var d = unitConfig.projectilePrefab.GetComponent<ProjectileConfigBaker>();
+            var projId = ConfigId.ForObject(d.projectileConfig);
+            unitConfig.projectileId = projId;
+        }
+
+        Debug.Log($"[UnitConfigBaker] Baked unit config for {thisPrefab}");
     }
 
     [Button]
@@ -63,7 +63,8 @@ public class UnitConfigBaker : MonoBehaviour {
             Gizmos.DrawLine(new Vector3(point1.x, point1.y, 0f), new Vector3(point2.x, point2.y, 0f));
         }
 
-        var lastPoint = UnitColliderUtility.ToWorldPoint(unitConfig.collider[unitConfig.collider.Length - 1], origin, mirrored);
+        var lastPoint =
+            UnitColliderUtility.ToWorldPoint(unitConfig.collider[unitConfig.collider.Length - 1], origin, mirrored);
         var firstPoint = UnitColliderUtility.ToWorldPoint(unitConfig.collider[0], origin, mirrored);
         Gizmos.DrawLine(
             new Vector3(lastPoint.x, lastPoint.y, 0f),

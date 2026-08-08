@@ -1,5 +1,6 @@
 using System;
 using NaughtyAttributes;
+using UnityEditor;
 using UnityEngine;
 
 public enum UnitAttackType {
@@ -18,7 +19,7 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig {
     public int damage;
     public float attackInterval;
     public float attackRange;
-    [ShowIf("_ranged")] public float projectileSpeed;
+    [ShowIf("_ranged")] public GameObject projectilePrefab;
 
     [Header("Baked")]
     [Baked] public Vector2[] collider;
@@ -28,6 +29,7 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig {
      */
     [Baked] public Vector2[] colliderBox;
 
+    [Baked] public ConfigId projectileId;
     [Baked] [ShowIf("_ranged")] public Vector2 projectilePosition;
     [Baked] public GameObject prefab;
 
@@ -38,5 +40,7 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig {
         id = ConfigId.ForObject(this);
         var radii = UnitColliderUtility.GetRadius(this);
         attackRange = Mathf.Max(radii, attackRange);
+
+        Debug.Log($"UnitConfig {name}[{id}] OnValidate; projectileId={projectileId}");
     }
 }

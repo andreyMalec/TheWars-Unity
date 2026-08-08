@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public sealed class DamageSystem : ISystem {
-    private const float ProjectileRadius = 0.1f;
 
     public void Run(Simulation s, Frame fr) {
         foreach (var pair in fr.Projectiles) {
@@ -11,7 +10,8 @@ public sealed class DamageSystem : ISystem {
                 continue;
             }
 
-            var hitDistance = ProjectileRadius + targetRadius;
+            var config = fr.FindConfig<ProjectileConfig>(projectile.ConfigId);
+            var hitDistance = config.radius + targetRadius;
             var hit = (targetPosition - projectile.Position).sqrMagnitude <= hitDistance * hitDistance;
             if (!hit) {
                 continue;

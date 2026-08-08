@@ -31,15 +31,17 @@ public sealed class WeaponSystem : ISystem {
                     config.projectilePosition,
                     unit.Position,
                     UnitColliderUtility.IsMirrored(unit.Direction));
+                var projConfig = fr.FindConfig<ProjectileConfig>(config.projectileId);
                 var state = new ProjectileState {
                     Id = fr.GenerateEntityId(),
+                    ConfigId = projConfig.id,
                     Team = unit.Team,
                     SourceEntityId = unit.Id,
                     TargetEntityId = unit.TargetEntityId,
                     Damage = config.damage,
                     Position = projectilePosition,
                     Direction = direction,
-                    Speed = config.projectileSpeed,
+                    Speed = projConfig.speed,
                     Lifetime = 5f
                 };
 

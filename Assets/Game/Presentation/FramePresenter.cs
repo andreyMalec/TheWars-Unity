@@ -55,33 +55,33 @@ public sealed class FramePresenter : MonoBehaviour {
     private void PresentProjectiles() {
         var projectiles = _simulation.Frame.Projectiles;
         foreach (var pair in projectiles) {
-            var view = GetOrCreateProjectileView(pair.Key);
+            var view = GetOrCreateProjectileView(pair.Key, _simulation.Frame.FindConfig<ProjectileConfig>(pair.Value.ConfigId));
             view.Present(pair.Value);
         }
 
         CleanupMissing(_projectileViews, projectiles);
     }
 
-    private BaseView GetOrCreateBaseView(int entityId, BaseConfig baseConfig) {
+    private BaseView GetOrCreateBaseView(int entityId, BaseConfig config) {
         if (_baseViews.TryGetValue(entityId, out var view)) {
             return view;
         }
 
         var viewObject = new GameObject();
         var newView = viewObject.AddComponent<BaseView>();
-        newView.Bind(entityId, baseConfig);
+        newView.Bind(entityId, config);
         _baseViews.Add(entityId, newView);
         return newView;
     }
 
-    private UnitView GetOrCreateUnitView(int entityId, UnitConfig unitConfig) {
+    private UnitView GetOrCreateUnitView(int entityId, UnitConfig config) {
         if (_unitViews.TryGetValue(entityId, out var view)) {
             return view;
         }
 
-        var viewObject = Instantiate(unitConfig.prefab);
+        var viewObject = Instantiate(config.prefab);
         var newView = viewObject.GetComponent<UnitView>();
-        newView.Bind(entityId, unitConfig);
+        newView.Bind(entityId, config);
         _unitViews.Add(entityId, newView);
         return newView;
     }
@@ -98,14 +98,14 @@ public sealed class FramePresenter : MonoBehaviour {
         return newView;
     }
 
-    private ProjectileView GetOrCreateProjectileView(int entityId) {
+    private ProjectileView GetOrCreateProjectileView(int entityId, ProjectileConfig config) {
         if (_projectileViews.TryGetValue(entityId, out var view)) {
             return view;
         }
 
-        var viewObject = new GameObject();
-        var newView = viewObject.AddComponent<ProjectileView>();
-        newView.Bind(entityId);
+        var viewObject = Instantiate(config.prefab);
+        var newView = viewObject.GetComponent<ProjectileView>();
+        newView.Bind(entityId, config);
         _projectileViews.Add(entityId, newView);
         return newView;
     }

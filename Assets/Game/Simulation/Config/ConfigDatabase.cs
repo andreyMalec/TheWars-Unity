@@ -10,6 +10,7 @@ public struct ConfigEntry {
 
 [CreateAssetMenu(menuName = "Game/Config Database")]
 public sealed class ConfigDatabase : ScriptableObject {
+    [SerializeField] private bool validate;
     [SerializeField] private ConfigEntry[] configs = Array.Empty<ConfigEntry>();
 
     private readonly Dictionary<Type, Dictionary<ConfigId, EntityConfig>> _entities = new();
@@ -56,6 +57,8 @@ public sealed class ConfigDatabase : ScriptableObject {
                 }
             }
         }
+
+        Debug.Log($"[ConfigDatabase] Invalidated");
     }
 
     public T GetConfig<T>(ConfigId configId) where T : EntityConfig {

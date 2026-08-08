@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7c60161789a422cb83149cd07f72925, type: 3}
   m_Name: Config Database
   m_EditorClassIdentifier: TheWars.Simulation::ConfigDatabase
+  validate: 0
   configs:
   - type: UnitConfig
     items:
@@ -20,3 +21,6 @@ MonoBehaviour:
   - type: BaseConfig
     items:
     - {fileID: 11400000, guid: 555dd547a556953419149ec58e2f5f10, type: 2}
+  - type: ProjectileConfig
+    items:
+    - {fileID: 11400000, guid: 5d17898f5837a0a4a8bcfcad9d6163be, type: 2}
