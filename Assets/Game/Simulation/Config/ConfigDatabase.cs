@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 [Serializable]
@@ -52,8 +53,7 @@ public sealed class ConfigDatabase : ScriptableObject {
                             $"[ConfigDatabase] Config item {item.name} is of type {item.GetType()} but expected {type}");
                     }
                 } else {
-                    Debug.LogError(
-                        $"[ConfigDatabase] Config item {item.name} is not of type EntityConfig");
+                    Debug.LogError($"[ConfigDatabase] Config item {item.name} is not of type EntityConfig");
                 }
             }
         }

@@ -19,7 +19,7 @@ MonoBehaviour:
   damage: 60
   attackInterval: 1
   attackRange: 0.5518139
-  projectileSpeed: 0
+  projectilePrefab: {fileID: 0}
   collider:
   - {x: 0.022272736, y: 0.55136424}
   - {x: -0.13969415, y: 0.42356226}

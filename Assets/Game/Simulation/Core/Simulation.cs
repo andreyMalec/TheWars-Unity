@@ -5,8 +5,7 @@ public sealed class Simulation {
 
     public Frame Frame { get; }
     public CommandQueue CommandQueue { get; }
-
-    public readonly Queue<SpawnUnitRequest> SpawnRequests = new Queue<SpawnUnitRequest>();
+    public SpawnQueue SpawnQueue { get; }
     public readonly Queue<BuildTurretRequest> BuildRequests = new Queue<BuildTurretRequest>();
     public readonly Queue<UpgradeBaseRequest> UpgradeRequests = new Queue<UpgradeBaseRequest>();
     public readonly Queue<DamageRequest> DamageRequests = new Queue<DamageRequest>();
@@ -15,6 +14,7 @@ public sealed class Simulation {
     public Simulation(ConfigDatabase configDatabase, int tickRate) {
         Frame = new Frame(1f / tickRate, configDatabase);
         CommandQueue = new CommandQueue();
+        SpawnQueue = new SpawnQueue();
 
         _systems.Add(new EconomySystem());
         _systems.Add(new BuildSystem());
@@ -41,7 +41,7 @@ public sealed class Simulation {
         CommandQueue.ExecuteAll(this);
 
         for (var i = 0; i < _systems.Count; i++) {
-            _systems[i].Run(this,  Frame);
+            _systems[i].Run(this, Frame);
         }
 
         Frame.Tick++;

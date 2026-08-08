@@ -2,11 +2,11 @@ using UnityEngine;
 
 public sealed class BuildTurretCommand : ICommand
 {
-    private readonly int _team;
+    private readonly Team _team;
     private readonly ConfigId _turretConfigId;
     private readonly Vector2 _position;
 
-    public BuildTurretCommand(int team, ConfigId turretConfigId, Vector2 position)
+    public BuildTurretCommand(Team team, ConfigId turretConfigId, Vector2 position)
     {
         _team = team;
         _turretConfigId = turretConfigId;

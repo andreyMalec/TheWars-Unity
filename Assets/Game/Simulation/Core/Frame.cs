@@ -48,7 +48,7 @@ public sealed class Frame {
         return _bases.TryGetValue(id, out state);
     }
 
-    public bool TryFindBaseByTeam(int team, out BaseState state) {
+    public bool TryFindBaseByTeam(Team team, out BaseState state) {
         foreach (var pair in _bases) {
             if (pair.Value.Team == team) {
                 state = pair.Value;
@@ -108,7 +108,7 @@ public sealed class Frame {
         return false;
     }
 
-    public bool TryGetEntityPositionAndTeam(int entityId, out Vector2 position, out int team) {
+    public bool TryGetEntityPositionAndTeam(int entityId, out Vector2 position, out Team team) {
         if (Units.TryGetValue(entityId, out var unit)) {
             position = unit.Position;
             team = unit.Team;
@@ -126,7 +126,7 @@ public sealed class Frame {
         return false;
     }
 
-    public bool TryGetEntityPositionTeamAndRadius(int entityId, out Vector2 position, out int team, out float radius) {
+    public bool TryGetEntityPositionTeamAndRadius(int entityId, out Vector2 position, out Team team, out float radius) {
         if (Units.TryGetValue(entityId, out var unit)) {
             position = unit.Position;
             team = unit.Team;
@@ -166,15 +166,15 @@ public sealed class Frame {
         return Vector2.zero;
     }
 
-    public bool FindEnemyInDirection(int team, Vector2 origin, Vector2 direction, out Damageable damageable) {
+    public bool FindEnemyInDirection(Team team, Vector2 origin, Vector2 direction, out Damageable damageable) {
         return TargetingUtility.FindEnemyInDirection(this, team, origin, direction, out damageable);
     }
 
-    public bool FindNearestEnemy(int team, Vector2 origin, out Damageable damageable) {
+    public bool FindNearestEnemy(Team team, Vector2 origin, out Damageable damageable) {
         return TargetingUtility.FindNearestEnemy(this, team, origin, out damageable);
     }
 
-    public int FindNearestEnemyId(int team, Vector2 origin) {
+    public int FindNearestEnemyId(Team team, Vector2 origin) {
         TargetingUtility.FindNearestEnemy(this, team, origin, out var damageable);
         return damageable?.Id ?? 0;
     }

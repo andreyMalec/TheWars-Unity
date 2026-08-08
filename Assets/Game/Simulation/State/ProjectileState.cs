@@ -9,7 +9,7 @@ public enum ProjectileType {
 public sealed class ProjectileState {
     public int Id;
     public ConfigId ConfigId;
-    public int Team;
+    public Team Team;
     public int SourceEntityId;
     public int TargetEntityId;
     public int Damage;

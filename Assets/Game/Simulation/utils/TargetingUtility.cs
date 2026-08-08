@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public static class TargetingUtility {
-    public static bool FindNearestEnemy(Frame frame, int team, Vector2 origin, out Damageable damageable) {
+    public static bool FindNearestEnemy(Frame frame, Team team, Vector2 origin, out Damageable damageable) {
         var bestDistanceSqr = float.MaxValue;
         Damageable best = null;
 
@@ -36,7 +36,7 @@ public static class TargetingUtility {
     }
 
     public static bool FindEnemyInDirection(
-        Frame frame, int team, Vector2 origin, Vector2 direction, out Damageable damageable
+        Frame frame, Team team, Vector2 origin, Vector2 direction, out Damageable damageable
     ) {
         var bestDistanceSqr = float.MaxValue;
         Damageable best = null;

@@ -51,7 +51,7 @@ public sealed class MovementSystem : ISystem {
 
     private static bool CanMoveTo(
         Frame frame,
-        int unitTeam,
+        Team unitTeam,
         Vector2 currentPosition,
         Vector2 desiredPosition,
         int unitId,
@@ -115,7 +115,7 @@ public sealed class MovementSystem : ISystem {
 
     private static bool IsBlockedByEnemyBaseBounds(
         Frame frame,
-        int unitTeam,
+        Team unitTeam,
         Vector2 currentPosition,
         Vector2 desiredPosition
     ) {

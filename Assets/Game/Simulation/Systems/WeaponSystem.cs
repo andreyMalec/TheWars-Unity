@@ -88,7 +88,7 @@ public sealed class WeaponSystem : ISystem {
 
     private static void SpawnProjectile(
         Frame fr,
-        int team,
+        Team team,
         int sourceEntityId,
         int targetEntityId,
         Vector2 position,

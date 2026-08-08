@@ -7,7 +7,7 @@ public enum UnitDirection {
 
 public sealed class UnitState : Damageable {
     public int Id { get; set; }
-    public int Team { get; set; }
+    public Team Team { get; set; }
     public ConfigId ConfigId { get; set; }
     public Vector2 Position { get; set; }
     public UnitDirection Direction { get; set; }
