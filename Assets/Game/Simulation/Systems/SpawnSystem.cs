@@ -11,18 +11,18 @@ public sealed class SpawnSystem : ISystem {
         if (!fr.TryFindBaseByTeam(team, out var baseState)) return;
         var baseConfig = fr.FindConfig<BaseConfig>(baseState.ConfigId);
 
-        foreach (UnitType unitType in Enum.GetValues(typeof(UnitType))) {
+        foreach (EntityType unitType in Enum.GetValues(typeof(EntityType))) {
             SpawnUnitType(fr, queue, baseConfig, baseState, unitType);
         }
     }
 
     private void SpawnUnitType(
         Frame fr, SpawnQueue queue,
-        BaseConfig baseConfig, BaseState baseState, UnitType unitType
+        BaseConfig baseConfig, BaseState baseState, EntityType entityType
     ) {
         var team = baseState.Team;
-        while (queue.Count(team, unitType) > 0) {
-            var request = queue.Peek(team, unitType);
+        while (queue.Count(team, entityType) > 0) {
+            var request = queue.Peek(team, entityType);
 
             if (IsSpawnAreaOccupied(fr, baseState, baseConfig)) {
                 break;
@@ -34,7 +34,7 @@ public sealed class SpawnSystem : ISystem {
             }
 
             baseState.Resources -= config.cost;
-            queue.Dequeue(team, unitType);
+            queue.Dequeue(team, entityType);
 
             var state = new UnitState {
                 Id = fr.GenerateEntityId(),

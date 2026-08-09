@@ -57,7 +57,7 @@ public class PlayerUiView : MonoBehaviour {
                 break;
             case PlayerInputController.MenuState.SpawnUnit:
                 for (int i = 0; i < actionButtons.Length; i++) {
-                    var unitConfig = _db.GetConfig<UnitConfig>(i);
+                    var unitConfig = _db.GetConfig<UnitConfig>(_state.Epoch, (EntityType)i);
                     if (unitConfig != null) {
                         var sprite = unitConfig.prefab.GetComponentInChildren<SpriteRenderer>().sprite;
                         var button = new ButtonData() {
@@ -73,7 +73,7 @@ public class PlayerUiView : MonoBehaviour {
                 break;
             case PlayerInputController.MenuState.BuyTurret:
                 for (int i = 0; i < actionButtons.Length; i++) {
-                    var turretConfig = _db.GetConfig<TurretConfig>(i);
+                    var turretConfig = _db.GetConfig<TurretConfig>(_state.Epoch, (EntityType)i);
 
                     if (turretConfig != null) {
                         var sprite = turretConfig.prefab.GetComponentInChildren<SpriteRenderer>().sprite;
@@ -96,6 +96,7 @@ public class PlayerUiView : MonoBehaviour {
                         actionButtons[i].SetData(data.empty);
                         continue;
                     }
+
                     var turretConfig = _db.GetConfig<TurretConfig>(slot.TurretConfigId);
 
                     if (turretConfig != null) {

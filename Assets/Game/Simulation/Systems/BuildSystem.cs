@@ -9,7 +9,7 @@ public sealed class BuildSystem : ISystem {
             var config = fr.FindConfig<TurretConfig>(request.TurretConfigId);
             if (baseState.Resources < config.cost) continue;
             var slot = baseState.Slots[(int)request.Slot];
-            if (!slot.IsActive) continue;
+            if (!slot.IsActive || slot.HasTurret) continue;
 
             var baseConfig = fr.FindConfig<BaseConfig>(baseState.ConfigId);
             baseState.Resources -= config.cost;

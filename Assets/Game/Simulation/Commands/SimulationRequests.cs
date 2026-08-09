@@ -3,7 +3,7 @@ using UnityEngine;
 public struct SpawnUnitRequest {
     public Team Team;
     public ConfigId UnitConfigId;
-    public UnitType UnitType;
+    public EntityType EntityType;
 }
 
 public struct BuildTurretRequest {

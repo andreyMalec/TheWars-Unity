@@ -30,13 +30,15 @@ public class PlayerCommandProcessor : PlayerInputListener {
 
     private ICommand OnInputSpawnUnit(Frame fr, PlayerInput.SpawnUnit input) {
         var team = fr.LocalPlayerTeam();
-        var unit = fr.FindConfig<UnitConfig>(input.UnitIndex);
+        if (!fr.TryFindBaseByTeam(team, out var baseState)) return null;
+        var unit = fr.FindConfig<UnitConfig>(baseState.Epoch, (EntityType)input.UnitIndex);
         return new SpawnUnitCommand(team, unit);
     }
 
     private ICommand OnInputBuildTurret(Frame fr, PlayerInput.BuildTurret input) {
         var team = fr.LocalPlayerTeam();
-        var turret = fr.FindConfig<TurretConfig>(input.TurretIndex);
+        if (!fr.TryFindBaseByTeam(team, out var baseState)) return null;
+        var turret = fr.FindConfig<TurretConfig>(baseState.Epoch, (EntityType)input.TurretIndex);
         return new BuildTurretCommand(team, turret.id, (TurretSlot)input.SlotIndex);
     }
 

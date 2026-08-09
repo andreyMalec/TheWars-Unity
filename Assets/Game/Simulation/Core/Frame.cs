@@ -28,8 +28,8 @@ public sealed class Frame {
         return _configDatabase.GetConfig<T>(configId);
     }
 
-    public T FindConfig<T>(int index) where T : EntityConfig {
-        return _configDatabase.GetConfig<T>(index);
+    public T FindConfig<T>(Epoch epoch, EntityType type) where T : EntityConfig {
+        return _configDatabase.GetConfig<T>(epoch, type);
     }
 
     public int GenerateEntityId() {

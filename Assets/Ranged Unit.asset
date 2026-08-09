@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0ab2196dc34122b9f9a3fe5e9bd161, type: 3}
   m_Name: Ranged Unit
   m_EditorClassIdentifier: TheWars.Simulation::UnitConfig
-  unitType: 1
+  epoch: 0
+  entityType: 1
   attackType: 1
   cost: 20
   maxHealth: 50

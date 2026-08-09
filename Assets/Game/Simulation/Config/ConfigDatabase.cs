@@ -14,25 +14,34 @@ public sealed class ConfigDatabase : ScriptableObject {
     [SerializeField] private bool validate;
     [SerializeField] private ConfigEntry[] configs = Array.Empty<ConfigEntry>();
 
-    private readonly Dictionary<Type, Dictionary<ConfigId, EntityConfig>> _entities = new();
+    private readonly Dictionary<Type, Dictionary<ConfigId, EntityConfig>> _byId = new();
+    private readonly Dictionary<Type, Dictionary<Epoch, Dictionary<EntityType, EntityConfig>>> _byEpochAndType = new();
 
     private void OnEnable() {
         RebuildCache();
     }
 
     public void RebuildCache() {
-        _entities.Clear();
+        _byId.Clear();
 
         for (var i = 0; i < configs.Length; i++) {
             var config = configs[i];
             if (config.items.Length == 0) continue;
             var type = config.items[0]?.GetType();
             if (type == null) continue;
-            _entities[type] = new Dictionary<ConfigId, EntityConfig>();
+            _byId[type] = new Dictionary<ConfigId, EntityConfig>();
+            _byEpochAndType[type] = new Dictionary<Epoch, Dictionary<EntityType, EntityConfig>>();
 
             for (var j = 0; j < config.items.Length; j++) {
                 var item = (EntityConfig)config.items[j];
-                _entities[type][item.id] = item;
+                _byId[type][item.id] = item;
+                if (config.items[j] is TypedEntity typed) {
+                    if (!_byEpochAndType[type].ContainsKey(typed._epoch)) {
+                        _byEpochAndType[type][typed._epoch] = new Dictionary<EntityType, EntityConfig>();
+                    }
+
+                    _byEpochAndType[type][typed._epoch][typed._entityType] = item;
+                }
             }
         }
     }
@@ -62,26 +71,28 @@ public sealed class ConfigDatabase : ScriptableObject {
     }
 
     public T GetConfig<T>(ConfigId configId) where T : EntityConfig {
-        if (_entities.TryGetValue(typeof(T), out var map)) {
+        if (_byId.TryGetValue(typeof(T), out var map)) {
             if (map.TryGetValue(configId, out var config)) {
                 if (config is T configInternal)
                     return configInternal;
             }
         }
 
-        Debug.Log($"[GetConfig] No config found for {configId} type {typeof(T)}");
+        Debug.Log($"[GetConfig] No config {typeof(T)} found for {configId}");
         return default(T);
     }
 
-    public T GetConfig<T>(int index) where T : EntityConfig {
-        foreach (var entry in configs) {
-            if (entry.items.Length <= index) continue;
-            if (entry.type != typeof(T).Name) continue;
-            if (entry.items[index] is T config)
-                return config;
+    public T GetConfig<T>(Epoch epoch, EntityType type) where T : EntityConfig {
+        if (_byEpochAndType.TryGetValue(typeof(T), out var epoches)) {
+            if (epoches.TryGetValue(epoch, out var map)) {
+                if (map.TryGetValue(type, out var config)) {
+                    if (config is T configInternal)
+                        return configInternal;
+                }
+            }
         }
 
-        Debug.Log($"[GetConfig] No config found for index {index} type {typeof(T)}");
+        Debug.Log($"[GetConfig] No config {typeof(T)} found for epoch {epoch}, type {type}");
         return default(T);
     }
 }

@@ -14,7 +14,7 @@ public sealed class BaseState : Damageable {
     public Team Team { get; set; }
     public int Health { get; set; }
     public int MaxHealth { get; set; }
-    public int Epoch { get; set; }
+    public Epoch Epoch { get; set; }
     public int Resources { get; set; }
     public Vector2 Position { get; set; }
     public Slot[] Slots { get; set; }

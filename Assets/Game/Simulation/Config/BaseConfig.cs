@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Config/Base Config")]
-public sealed class BaseConfig : ScriptableObject, EntityConfig {
+public sealed class BaseConfig : ScriptableObject, EntityConfig, TypedEntity {
     public ConfigId id { get; private set; }
+    public Epoch epoch;
+    public EntityType entityType;
     public int startHealth;
     public int startResources;
     public int incomePerSecond;
@@ -18,4 +20,7 @@ public sealed class BaseConfig : ScriptableObject, EntityConfig {
     private void OnValidate() {
         id = ConfigId.ForObject(this);
     }
+
+    public Epoch _epoch => epoch;
+    public EntityType _entityType => entityType;
 }

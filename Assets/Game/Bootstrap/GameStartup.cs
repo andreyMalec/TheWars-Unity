@@ -34,14 +34,14 @@ public sealed class GameStartup : MonoBehaviour {
         var count = 2;
 
         for (var i = 0; i < count; i++) {
-            var config = configDatabase.GetConfig<BaseConfig>(0);
+            var config = configDatabase.GetConfig<BaseConfig>(Epoch.StoneAge, EntityType.Type1);
             var state = new BaseState {
                 Id = simulation.Frame.GenerateEntityId(),
                 Team = (Team)i,
                 ConfigId = config.id,
                 Position = initialBasePositions[i],
                 Health = config.startHealth,
-                Epoch = 1,
+                Epoch = Epoch.StoneAge,
                 Resources = config.startResources,
                 Slots = new Slot[config.slotPositions.Length]
             };

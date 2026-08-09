@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 
 public sealed class SpawnQueue {
-    private readonly Dictionary<UnitType, Queue<SpawnUnitRequest>> _pendingLeft = new();
-    private readonly Dictionary<UnitType, Queue<SpawnUnitRequest>> _pendingRight = new();
+    private readonly Dictionary<EntityType, Queue<SpawnUnitRequest>> _pendingLeft = new();
+    private readonly Dictionary<EntityType, Queue<SpawnUnitRequest>> _pendingRight = new();
 
     public SpawnQueue() {
-        foreach (UnitType unitType in Enum.GetValues(typeof(UnitType))) {
+        foreach (EntityType unitType in Enum.GetValues(typeof(EntityType))) {
             _pendingLeft[unitType] = new Queue<SpawnUnitRequest>();
             _pendingRight[unitType] = new Queue<SpawnUnitRequest>();
         }
@@ -14,33 +14,33 @@ public sealed class SpawnQueue {
 
     public void Enqueue(SpawnUnitRequest request) {
         if (request.Team == Team.Left) {
-            _pendingLeft[request.UnitType].Enqueue(request);
+            _pendingLeft[request.EntityType].Enqueue(request);
         } else if (request.Team == Team.Right) {
-            _pendingRight[request.UnitType].Enqueue(request);
+            _pendingRight[request.EntityType].Enqueue(request);
         }
     }
 
-    public int Count(Team team, UnitType unitType) {
+    public int Count(Team team, EntityType entityType) {
         if (team == Team.Left) {
-            return _pendingLeft[unitType].Count;
+            return _pendingLeft[entityType].Count;
         } else {
-            return _pendingRight[unitType].Count;
+            return _pendingRight[entityType].Count;
         }
     }
 
-    public SpawnUnitRequest Peek(Team team, UnitType unitType) {
+    public SpawnUnitRequest Peek(Team team, EntityType entityType) {
         if (team == Team.Left) {
-            return _pendingLeft[unitType].Peek();
+            return _pendingLeft[entityType].Peek();
         } else {
-            return _pendingRight[unitType].Peek();
+            return _pendingRight[entityType].Peek();
         }
     }
 
-    public SpawnUnitRequest Dequeue(Team team, UnitType unitType) {
+    public SpawnUnitRequest Dequeue(Team team, EntityType entityType) {
         if (team == Team.Left) {
-            return _pendingLeft[unitType].Dequeue();
+            return _pendingLeft[entityType].Dequeue();
         } else {
-            return _pendingRight[unitType].Dequeue();
+            return _pendingRight[entityType].Dequeue();
         }
     }
 }

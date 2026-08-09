@@ -8,7 +8,7 @@ public enum UnitAttackType {
     Ranged
 }
 
-public enum UnitType {
+public enum EntityType {
     Type1,
     Type2,
     Type3,
@@ -16,9 +16,10 @@ public enum UnitType {
 }
 
 [CreateAssetMenu(menuName = "Game/Config/Unit Config")]
-public sealed class UnitConfig : ScriptableObject, EntityConfig {
+public sealed class UnitConfig : ScriptableObject, EntityConfig, TypedEntity {
     public ConfigId id { get; private set; }
-    public UnitType unitType;
+    public Epoch epoch;
+    public EntityType entityType;
     public UnitAttackType attackType;
     public int cost;
     public int maxHealth;
@@ -51,4 +52,7 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig {
 
         Debug.Log($"UnitConfig {name}[{id}] OnValidate; projectileId={projectileId}");
     }
+
+    public Epoch _epoch => epoch;
+    public EntityType _entityType => entityType;
 }
