@@ -7,6 +7,7 @@ public sealed class Simulation {
     public Frame Frame { get; }
     public SpawnQueue SpawnQueue { get; }
     public readonly Queue<BuildTurretRequest> BuildRequests = new();
+    public readonly Queue<BuySlotRequest> BuySlotRequests = new();
     public readonly Queue<UpgradeBaseRequest> UpgradeRequests = new();
     public readonly Queue<SpecialWeaponRequest> SpecialWeaponRequests = new();
     public readonly Queue<DamageRequest> DamageRequests = new();
@@ -20,6 +21,7 @@ public sealed class Simulation {
         _systems.Add(new BuildSystem());
         _systems.Add(new SpawnSystem());
         _systems.Add(new BaseUpgradeSystem());
+        _systems.Add(new BuySlotSystem());
         _systems.Add(new MovementSystem());
         _systems.Add(new TargetSystem());
         _systems.Add(new WeaponSystem());

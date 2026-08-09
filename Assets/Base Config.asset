@@ -13,9 +13,24 @@ MonoBehaviour:
   m_Name: Base Config
   m_EditorClassIdentifier: TheWars.Simulation::BaseConfig
   startHealth: 500
-  startResources: 0
+  startResources: 10000
   incomePerSecond: 5
   upgradeCost: 100
+  slotCost:
+  - key: 0
+    value: 0
+  - key: 1
+    value: 100
+  - key: 2
+    value: 500
+  - key: 3
+    value: 1000
   healthPerUpgrade: 100
-  bounds: {x: 0, y: 0, z: 1, w: 1}
-  slotPositions: []
+  colliderSize: {x: 0.28216285, y: 0.7314316}
+  colliderOffset: {x: 0.027458131, y: -0.004967153}
+  slotPositions:
+  - {x: 0.082, y: 0.27}
+  - {x: 0.045, y: 0.433}
+  - {x: 0.044, y: 0.649}
+  - {x: 0.044, y: 0.837}
+  prefab: {fileID: 9172579707124366618, guid: caae13ef57359d84b9023eda62829ace, type: 3}

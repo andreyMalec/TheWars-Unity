@@ -7,9 +7,9 @@ public sealed class BuildSystem : ISystem {
             }
 
             var config = fr.FindConfig<TurretConfig>(request.TurretConfigId);
-            if (baseState.Resources < config.cost) {
-                continue;
-            }
+            if (baseState.Resources < config.cost) continue;
+            var slot = baseState.Slots[(int)request.Slot];
+            if (!slot.IsActive) continue;
 
             var baseConfig = fr.FindConfig<BaseConfig>(baseState.ConfigId);
             baseState.Resources -= config.cost;
@@ -23,6 +23,9 @@ public sealed class BuildSystem : ISystem {
                 TargetEntityId = 0,
                 Cooldown = 0f
             };
+            slot.HasTurret = true;
+            slot.TurretId = state.Id;
+            slot.TurretConfigId = state.ConfigId;
 
             fr.AddTurret(state);
         }

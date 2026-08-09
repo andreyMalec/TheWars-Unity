@@ -9,7 +9,15 @@ public class PlayerInputController : MonoBehaviour {
     [SerializeField] private Button backButton;
 
     public event Action<MenuState> OnMenuStateChanged;
+
     private MenuState _menu = MenuState.Main;
+    private MenuState Menu {
+        get => _menu;
+        set {
+            _menu = value;
+            OnMenuStateChanged?.Invoke(_menu);
+        }
+    }
 
     private PlayerInputListener _listener;
     private int _turretIndex;
@@ -17,7 +25,6 @@ public class PlayerInputController : MonoBehaviour {
     public enum MenuState {
         Main,
         SpawnUnit,
-        BuySlot,
         BuyTurret,
         BuildTurret,
         DestroyTurret
@@ -49,40 +56,34 @@ public class PlayerInputController : MonoBehaviour {
     }
 
     private void HandleBack() {
-        if (_menu == MenuState.BuildTurret) {
-            _menu = MenuState.BuyTurret;
+        if (Menu == MenuState.BuildTurret) {
+            Menu = MenuState.BuyTurret;
         } else {
-            _menu = MenuState.Main;
+            Menu = MenuState.Main;
         }
-
-        OnMenuStateChanged?.Invoke(_menu);
     }
 
     private void HandleAction(int buttonIndex) {
-        switch (_menu) {
+        switch (Menu) {
             case MenuState.Main:
                 switch (buttonIndex) {
-                    case 0: _menu = MenuState.SpawnUnit; break;
-                    case 1: _menu = MenuState.BuySlot; break;
-                    case 2: _menu = MenuState.BuyTurret; break;
-                    case 3: _menu = MenuState.DestroyTurret; break;
+                    case 0: Menu = MenuState.SpawnUnit; break;
+                    case 1: HandleInput(new PlayerInput.BuySlot()); break;
+                    case 2: Menu = MenuState.BuyTurret; break;
+                    case 3: Menu = MenuState.DestroyTurret; break;
                 }
 
-                OnMenuStateChanged?.Invoke(_menu);
                 break;
             case MenuState.SpawnUnit:
                 HandleInput(new PlayerInput.SpawnUnit(buttonIndex));
                 break;
-            case MenuState.BuySlot:
-                HandleInput(new PlayerInput.BuySlot(buttonIndex));
-                break;
             case MenuState.BuyTurret:
                 _turretIndex = buttonIndex;
-                _menu = MenuState.BuildTurret;
-                OnMenuStateChanged?.Invoke(_menu);
+                Menu = MenuState.BuildTurret;
                 break;
             case MenuState.BuildTurret:
                 HandleInput(new PlayerInput.BuildTurret(_turretIndex, buttonIndex));
+                Menu = MenuState.Main;
                 break;
             case MenuState.DestroyTurret:
                 HandleInput(new PlayerInput.DestroyTurret(buttonIndex));

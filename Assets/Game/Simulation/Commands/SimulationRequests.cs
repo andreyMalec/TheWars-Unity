@@ -12,6 +12,10 @@ public struct BuildTurretRequest {
     public TurretSlot Slot;
 }
 
+public struct BuySlotRequest {
+    public Team Team;
+}
+
 public struct UpgradeBaseRequest {
     public Team Team;
 }

@@ -41,9 +41,15 @@ public sealed class GameStartup : MonoBehaviour {
                 ConfigId = config.id,
                 Position = initialBasePositions[i],
                 Health = config.startHealth,
-                Level = 1,
-                Resources = config.startResources
+                Epoch = 1,
+                Resources = config.startResources,
+                Slots = new Slot[config.slotPositions.Length]
             };
+            for (int j = 0; j < state.Slots.Length; j++) {
+                state.Slots[j] = new Slot();
+            }
+
+            state.Slots[0].IsActive = true;
 
             simulation.Frame.AddBase(state);
         }

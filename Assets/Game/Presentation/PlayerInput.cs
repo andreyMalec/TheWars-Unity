@@ -14,11 +14,6 @@ public interface PlayerInput {
     }
 
     public sealed class BuySlot : PlayerInput {
-        public int SlotIndex { get; }
-
-        public BuySlot(int slotIndex) {
-            SlotIndex = slotIndex;
-        }
     }
 
     public sealed class BuildTurret : PlayerInput {

@@ -590,6 +590,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: TheWars.Presentation::BaseView
   EntityId: 0
+  slots:
+  - {fileID: 1985794624489081158}
+  - {fileID: 7678399513348829097}
+  - {fileID: 2817132779117881704}
+  - {fileID: 8239390392345810846}
 --- !u!114 &2365571383844616842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -603,8 +608,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: TheWars.Presentation::BaseConfigBaker
   baseConfig: {fileID: 11400000, guid: 555dd547a556953419149ec58e2f5f10, type: 2}
-  slotPositions:
-  - {fileID: 1985794624489081158}
-  - {fileID: 7678399513348829097}
-  - {fileID: 2817132779117881704}
-  - {fileID: 8239390392345810846}

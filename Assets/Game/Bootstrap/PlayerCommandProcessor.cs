@@ -16,6 +16,8 @@ public class PlayerCommandProcessor : PlayerInputListener {
                 command = new SpecialWeaponCommand(team); break;
             case PlayerInput.SpawnUnit spawn:
                 command = OnInputSpawnUnit(fr, spawn); break;
+            case PlayerInput.BuySlot buy:
+                command = new BuySlotCommand(team); break;
             case PlayerInput.BuildTurret build:
                 command = OnInputBuildTurret(fr, build); break;
             case PlayerInput.DestroyTurret destroy:

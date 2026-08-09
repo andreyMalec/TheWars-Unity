@@ -10,7 +10,7 @@ public sealed class BaseUpgradeSystem : ISystem {
                 }
 
                 baseState.Resources -= config.upgradeCost;
-                baseState.Level += 1;
+                baseState.Epoch += 1;
                 baseState.Health += config.healthPerUpgrade;
             }
         }

@@ -89,6 +89,29 @@ public class PlayerUiView : MonoBehaviour {
                 }
 
                 break;
+            case PlayerInputController.MenuState.BuildTurret:
+                for (int i = 0; i < actionButtons.Length; i++) {
+                    var slot = _state.Slots[i];
+                    if (!slot.IsActive || !slot.HasTurret) {
+                        actionButtons[i].SetData(data.empty);
+                        continue;
+                    }
+                    var turretConfig = _db.GetConfig<TurretConfig>(slot.TurretConfigId);
+
+                    if (turretConfig != null) {
+                        var sprite = turretConfig.prefab.GetComponentInChildren<SpriteRenderer>().sprite;
+                        var button = new ButtonData {
+                            image = sprite,
+                            text = turretConfig.cost.ToString(),
+                        };
+
+                        actionButtons[i].SetData(button);
+                    } else {
+                        actionButtons[i].SetData(data.empty);
+                    }
+                }
+
+                break;
         }
     }
 }

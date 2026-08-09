@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class BaseConfigBaker : MonoBehaviour {
     [SerializeField] private BaseConfig baseConfig;
-    [SerializeField] private Transform[] slotPositions;
 
     private void OnValidate() {
         if (baseConfig == null) return;
@@ -20,7 +19,8 @@ public class BaseConfigBaker : MonoBehaviour {
 
     [Button]
     private void BakeConfigs() {
-        baseConfig.slotPositions = slotPositions.Select(t => t.localPosition.ToVector2()).ToArray();
+        var view = GetComponent<BaseView>();
+        baseConfig.slotPositions = view.slots.Select(t => t.localPosition.ToVector2()).ToArray();
         var collider = GetComponent<BoxCollider2D>();
         baseConfig.colliderOffset = collider.offset;
         baseConfig.colliderSize = collider.size;
@@ -38,7 +38,7 @@ public class BaseConfigBaker : MonoBehaviour {
             var slotStart = UnitColliderUtility.ToWorldPoint(slotLocal, origin, mirrored);
 
             Gizmos.color = Color.greenYellow;
-            Gizmos.DrawWireSphere(slotStart, 0.25f);
+            Gizmos.DrawWireSphere(slotStart, 0.1f);
         }
 
         Gizmos.color = Color.white;
