@@ -15,7 +15,7 @@ MonoBehaviour:
   epoch: 0
   entityType: 0
   startHealth: 500
-  startResources: 10
+  startResources: 20
   incomePerSecond: 5
   upgradeCost: 100
   slotCost:

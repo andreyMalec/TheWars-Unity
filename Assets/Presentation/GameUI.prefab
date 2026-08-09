@@ -392,15 +392,23 @@ MonoBehaviour:
   data:
     spawnUnit:
       image: {fileID: 21300000, guid: d981ff3a92698b844b2248244a65f126, type: 3}
+      badge: {fileID: 21300000, guid: f9cde2d64b2897445abace01371169c6, type: 3}
       text: 
     buySlot:
       image: {fileID: 21300000, guid: d1b269d8ce2f1e34cb967c7749a79ded, type: 3}
+      badge: {fileID: 21300000, guid: f9cde2d64b2897445abace01371169c6, type: 3}
       text: 
     buyTurret:
       image: {fileID: 21300000, guid: 89ce91fd8f0226643a247efbffa670a3, type: 3}
+      badge: {fileID: -7450409250124038575, guid: df1a974d5fbfce54995208720b108d33, type: 3}
       text: 
     destroyTurret:
-      image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+      image: {fileID: 21300000, guid: 89ce91fd8f0226643a247efbffa670a3, type: 3}
+      badge: {fileID: -5960856246574868174, guid: 94389f638f18e814db8c86541503631c, type: 3}
+      text: 
+    empty:
+      image: {fileID: 21300000, guid: f9cde2d64b2897445abace01371169c6, type: 3}
+      badge: {fileID: 21300000, guid: f9cde2d64b2897445abace01371169c6, type: 3}
       text: 
   upgradeBaseButton: {fileID: 9061835294871411814}
   specialWeaponButton: {fileID: 8432070028548394405}
@@ -422,34 +430,6 @@ PrefabInstance:
     - target: {fileID: 16905948825938606, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Name
       value: Action2Button
-      objectReference: {fileID: 0}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_Type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: d1b269d8ce2f1e34cb967c7749a79ded, type: 3}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_FillAmount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_FillMethod
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_FillOrigin
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3095541088815285927, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_text
-      value: U2
       objectReference: {fileID: 0}
     - target: {fileID: 4551059389761912952, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Pivot.x
@@ -575,9 +555,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: UpgradeButton
       objectReference: {fileID: 0}
+    - target: {fileID: 1247655795159527585, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3095541088815285927, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_text
       value: Upgrade
+      objectReference: {fileID: 0}
+    - target: {fileID: 3095541088815285927, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_fontSize
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 4551059389761912952, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Pivot.x
@@ -659,6 +647,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8835392073052567435, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -13.2613
+      objectReference: {fileID: 0}
+    - target: {fileID: 8835392073052567435, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -9.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 8835392073052567435, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1.800003
+      objectReference: {fileID: 0}
+    - target: {fileID: 8835392073052567435, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.074995995
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -702,18 +706,6 @@ PrefabInstance:
     - target: {fileID: 16905948825938606, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Name
       value: Action4Button
-      objectReference: {fileID: 0}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 89ce91fd8f0226643a247efbffa670a3, type: 3}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3095541088815285927, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_text
-      value: U4
       objectReference: {fileID: 0}
     - target: {fileID: 4551059389761912952, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Pivot.x
@@ -839,9 +831,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpecialWeaponButton
       objectReference: {fileID: 0}
+    - target: {fileID: 1247655795159527585, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3095541088815285927, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_text
       value: BOOM
+      objectReference: {fileID: 0}
+    - target: {fileID: 3095541088815285927, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_fontSize
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4551059389761912952, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Pivot.x
@@ -967,18 +967,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Action3Button
       objectReference: {fileID: 0}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 89ce91fd8f0226643a247efbffa670a3, type: 3}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3095541088815285927, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_text
-      value: U3
-      objectReference: {fileID: 0}
     - target: {fileID: 4551059389761912952, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1102,6 +1090,18 @@ PrefabInstance:
     - target: {fileID: 16905948825938606, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Name
       value: BackButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 134971211442593334, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -9007981542807625382, guid: 86a1c8f6c8d519c499f55be37b4580a4, type: 3}
+    - target: {fileID: 1247655795159527585, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3095541088815285927, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_text
@@ -1230,22 +1230,6 @@ PrefabInstance:
     - target: {fileID: 16905948825938606, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Name
       value: Action1Button
-      objectReference: {fileID: 0}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_Type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: d981ff3a92698b844b2248244a65f126, type: 3}
-    - target: {fileID: 890455306674857716, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3095541088815285927, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
-      propertyPath: m_text
-      value: U1
       objectReference: {fileID: 0}
     - target: {fileID: 4551059389761912952, guid: 816c80c675d78734d9a76a98e16a043a, type: 3}
       propertyPath: m_Pivot.x

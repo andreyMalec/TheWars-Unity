@@ -12,7 +12,7 @@ public sealed class BuildTurretCommand : ICommand {
     }
 
     public void Execute(Simulation simulation) {
-        simulation.BuildRequests.Enqueue(new BuildTurretRequest {
+        simulation.BuildTurretRequests.Enqueue(new BuildTurretRequest {
             Team = _team,
             TurretConfigId = _turretConfigId,
             Slot = _slot

@@ -1,7 +1,7 @@
-public sealed class BuildSystem : ISystem {
+public sealed class BuildTurretSystem : ISystem {
     public void Run(Simulation s, Frame fr) {
-        while (s.BuildRequests.Count > 0) {
-            var request = s.BuildRequests.Dequeue();
+        while (s.BuildTurretRequests.Count > 0) {
+            var request = s.BuildTurretRequests.Dequeue();
             if (!fr.TryFindBaseByTeam(request.Team, out var baseState)) {
                 continue;
             }

@@ -10,6 +10,9 @@ public sealed class DestroyTurretCommand : ICommand {
     }
 
     public void Execute(Simulation simulation) {
-        //TODo
+        simulation.DestroyTurretRequests.Enqueue(new DestroyTurretRequest {
+            Team = _team,
+            Slot = _slot
+        });
     }
 }

@@ -87,6 +87,7 @@ public class PlayerInputController : MonoBehaviour {
                 break;
             case MenuState.DestroyTurret:
                 HandleInput(new PlayerInput.DestroyTurret(buttonIndex));
+                Menu = MenuState.Main;
                 break;
         }
     }
