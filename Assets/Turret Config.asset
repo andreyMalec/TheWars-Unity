@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Turret Config
   m_EditorClassIdentifier: TheWars.Simulation::TurretConfig
   epoch: 0
-  entityType: 0
+  entityType: 2
   cost: 5
   attackRange: 3
   attackInterval: 1

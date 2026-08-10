@@ -78,7 +78,7 @@ public sealed class ConfigDatabase : ScriptableObject {
             }
         }
 
-        Debug.Log($"[GetConfig] No config {typeof(T)} found for {configId}");
+        // Debug.Log($"[GetConfig] No config {typeof(T)} found for {configId}");
         return default(T);
     }
 
@@ -92,7 +92,7 @@ public sealed class ConfigDatabase : ScriptableObject {
             }
         }
 
-        Debug.Log($"[GetConfig] No config {typeof(T)} found for epoch {epoch}, type {type}");
+        // Debug.Log($"[GetConfig] No config {typeof(T)} found for epoch {epoch}, type {type}");
         return default(T);
     }
 }

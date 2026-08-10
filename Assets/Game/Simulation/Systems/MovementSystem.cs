@@ -43,6 +43,9 @@ public sealed class MovementSystem : ISystem {
             if (CanMoveTo(fr, state.Team, state.Position, desired, id, unitRadii[id], unitColliders[id], direction, sortedIds, unitRadii, unitColliders, unitDirections, startPositions,
                     resolvedPositions)) {
                 state.Position = desired;
+                state.Moving = true;
+            } else {
+                state.Moving = false;
             }
 
             resolvedPositions[id] = state.Position;

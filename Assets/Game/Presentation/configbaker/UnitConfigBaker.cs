@@ -40,6 +40,20 @@ public class UnitConfigBaker : MonoBehaviour {
         collider.enabled = false;
 
         unitConfig.projectilePosition = _ranged ? projectilePosition.localPosition : Vector2.zero;
+        var animator = GetComponentInChildren<Animator>();
+        if (animator == null) return;
+        var clips = animator.runtimeAnimatorController.animationClips;
+        for (int i = 0; i < clips.Length; i++) {
+            var clip = clips[i];
+            var events = AnimationUtility.GetAnimationEvents(clip);
+            for (int j = 0; j < events.Length; j++) {
+                var e = events[j];
+                if (e.functionName == "Execute") {
+                    unitConfig.attackExecuteTick = Mathf.RoundToInt(e.time  * Simulation.TickRate);
+                    break;
+                }
+            }
+        }
     }
 
     private void OnDrawGizmos() {

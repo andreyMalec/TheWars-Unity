@@ -8,53 +8,30 @@ public sealed class WeaponSystem : ISystem {
             var unit = pair.Value;
             var config = fr.FindConfig<UnitConfig>(unit.ConfigId);
 
-            if (unit.Cooldown > 0f) {
-                unit.Cooldown -= dt;
-            }
-
-            if (unit.TargetEntityId == 0) {
+            // 1. Выполнить уже начатую атаку
+            if (unit.Attack.ExecuteTick > 0 && fr.Tick >= unit.Attack.ExecuteTick) {
+                ExecuteAttack(s, fr, unit, config);
+                unit.Attack.ExecuteTick = 0;
+                unit.Attack.CooldownTick = fr.Tick + config.attackIntervalTicks;
                 continue;
             }
 
+            // 2. Если сейчас готова новая атака
+            if (unit.Attack.ExecuteTick > 0) continue;
+            if (unit.Attack.CooldownTick > fr.Tick) continue;
+            if (unit.TargetEntityId == 0) continue;
             if (!fr.TryGetEntityPositionAndTeam(unit.TargetEntityId, out var targetPosition, out _)) {
+                unit.TargetEntityId = 0;
                 continue;
             }
 
-            var inRange = (targetPosition - unit.Position).sqrMagnitude <= config.attackRange * config.attackRange;
-            if (!inRange || unit.Cooldown > 0f) {
+            var range = config.attackRange * config.attackRange;
+            if ((targetPosition - unit.Position).sqrMagnitude > range)
                 continue;
-            }
 
-            if (config.attackType == UnitAttackType.Ranged) {
-                var direction = (targetPosition - unit.Position).normalized;
-                var projectilePosition = UnitColliderUtility.ToWorldPoint(
-                    config.projectilePosition,
-                    unit.Position,
-                    UnitColliderUtility.IsMirrored(unit.Direction));
-                var projConfig = fr.FindConfig<ProjectileConfig>(config.projectileId);
-                var state = new ProjectileState {
-                    Id = fr.GenerateEntityId(),
-                    ConfigId = projConfig.id,
-                    Team = unit.Team,
-                    SourceEntityId = unit.Id,
-                    TargetEntityId = unit.TargetEntityId,
-                    Damage = config.damage,
-                    Position = projectilePosition,
-                    Direction = direction,
-                    Speed = projConfig.speed,
-                    Lifetime = 5f
-                };
-
-                fr.AddProjectile(state);
-            } else {
-                s.DamageRequests.Enqueue(new DamageRequest {
-                    SourceEntityId = unit.Id,
-                    TargetEntityId = unit.TargetEntityId,
-                    Amount = config.damage
-                });
-            }
-
-            unit.Cooldown = config.attackInterval > 0f ? config.attackInterval : 1f;
+            // Начинаем атаку
+            unit.Attack.ExecuteTick = fr.Tick + config.attackExecuteTick;
+            s.Publish(new AttackStartedEvent(unit.Id));
         }
 
         foreach (var pair in fr.Turrets) {
@@ -103,6 +80,47 @@ public sealed class WeaponSystem : ISystem {
 
             fr.AddProjectile(state);
             turret.Cooldown = config.attackInterval > 0f ? config.attackInterval : 1f;
+        }
+    }
+
+    private void ExecuteAttack(
+        Simulation s,
+        Frame fr,
+        UnitState unit,
+        UnitConfig config
+    ) {
+        if (config.attackType == UnitAttackType.Ranged) {
+            fr.TryGetEntityPositionAndTeam(unit.TargetEntityId, out var targetPosition, out _);
+
+            var direction = (targetPosition - unit.Position).normalized;
+
+            var projectilePosition = UnitColliderUtility.ToWorldPoint(
+                config.projectilePosition,
+                unit.Position,
+                UnitColliderUtility.IsMirrored(unit.Direction));
+
+            var projConfig = fr.FindConfig<ProjectileConfig>(config.projectileId);
+
+            var state = new ProjectileState {
+                Id = fr.GenerateEntityId(),
+                ConfigId = projConfig.id,
+                Team = unit.Team,
+                SourceEntityId = unit.Id,
+                TargetEntityId = unit.TargetEntityId,
+                Damage = config.damage,
+                Position = projectilePosition,
+                Direction = direction,
+                Speed = projConfig.speed,
+                Lifetime = 5f
+            };
+
+            fr.AddProjectile(state);
+        } else {
+            s.DamageRequests.Enqueue(new DamageRequest {
+                SourceEntityId = unit.Id,
+                TargetEntityId = unit.TargetEntityId,
+                Amount = config.damage
+            });
         }
     }
 }

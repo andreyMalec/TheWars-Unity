@@ -38,6 +38,9 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig, TypedEntity {
      */
     [Baked] public Vector2[] colliderBox;
 
+    [Baked] public int attackIntervalTicks;
+    [Baked] public int attackExecuteTick;
+
     [Baked] public ConfigId projectileId;
     [Baked] [ShowIf("_ranged")] public Vector2 projectilePosition;
     [Baked] public GameObject prefab;
@@ -49,6 +52,7 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig, TypedEntity {
         id = ConfigId.ForObject(this);
         var radii = UnitColliderUtility.GetRadius(this);
         attackRange = Mathf.Max(radii, attackRange);
+        attackIntervalTicks = Mathf.RoundToInt(attackInterval * Simulation.TickRate);
 
         Debug.Log($"UnitConfig {name}[{id}] OnValidate; projectileId={projectileId}");
     }

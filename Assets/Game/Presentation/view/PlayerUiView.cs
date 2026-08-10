@@ -26,7 +26,6 @@ public class PlayerUiView : MonoBehaviour {
 
     private void Awake() {
         _inputController = GetComponent<PlayerInputController>();
-        HandleMenuStateChanged(PlayerInputController.MenuState.Main);
         backButton.SetData(data.empty);
     }
 
@@ -45,6 +44,7 @@ public class PlayerUiView : MonoBehaviour {
     public void Present(in BaseState state) {
         _state = state;
         moneyText.text = state.Resources.ToString();
+        HandleMenuStateChanged(_inputController.Menu);
     }
 
     private void HandleMenuStateChanged(PlayerInputController.MenuState menu) {
@@ -57,7 +57,19 @@ public class PlayerUiView : MonoBehaviour {
                 }
 
                 actionButtons[0].SetData(data.spawnUnit);
-                actionButtons[1].SetData(data.buySlot);
+
+                if (_state != null) {
+                    var config = _db.GetConfig<BaseConfig>(_state.ConfigId);
+                    var cost = _state.NextSlotCost(config, out _);
+                    var buySlot = new ButtonData {
+                        image = data.buySlot.image,
+                        badge = data.buySlot.badge,
+                        text = cost > 0 ? cost.ToString() : ""
+                    };
+                    actionButtons[1].SetData(buySlot);
+                } else
+                    actionButtons[1].SetData(data.buySlot);
+
                 actionButtons[2].SetData(data.buyTurret);
                 actionButtons[3].SetData(data.destroyTurret);
                 break;
@@ -106,6 +118,7 @@ public class PlayerUiView : MonoBehaviour {
                         actionButtons[i].gameObject.SetActive(false);
                         continue;
                     }
+
                     actionButtons[i].gameObject.SetActive(true);
                     if (!slot.HasTurret) {
                         actionButtons[i].SetData(data.empty);
@@ -136,6 +149,7 @@ public class PlayerUiView : MonoBehaviour {
                         actionButtons[i].gameObject.SetActive(false);
                         continue;
                     }
+
                     actionButtons[i].gameObject.SetActive(true);
                     if (!slot.HasTurret) {
                         actionButtons[i].SetData(data.empty);

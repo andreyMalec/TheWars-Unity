@@ -18,4 +18,16 @@ public sealed class BaseState : Damageable {
     public int Resources { get; set; }
     public Vector2 Position { get; set; }
     public Slot[] Slots { get; set; }
+
+    public int NextSlotCost(BaseConfig config, out int index) {
+        for (var i = 0; i < Slots.Length; i++) {
+            if (!Slots[i].IsActive) {
+                index = i;
+                return config.slotCost[(TurretSlot)i];
+            }
+        }
+
+        index = -1;
+        return 0;
+    }
 }

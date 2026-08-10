@@ -4,13 +4,12 @@ using UnityEngine;
 public sealed class GameStartup : MonoBehaviour {
     [SerializeField] private GameObject playerUiPrefab;
     [SerializeField] private ConfigDatabase configDatabase;
-    [SerializeField] private int tickRate = 60;
     [SerializeField] private Vector2[] initialBasePositions = { new Vector2(-8f, 0f), new Vector2(8f, 0f) };
 
     private void Awake() {
         configDatabase.RebuildCache();
 
-        var compositionRoot = new GameCompositionRoot(configDatabase, tickRate);
+        var compositionRoot = new GameCompositionRoot(configDatabase, Simulation.TickRate);
         InitializeBases(compositionRoot.Simulation);
 
         var runner = gameObject.AddComponent<SimulationRunner>();

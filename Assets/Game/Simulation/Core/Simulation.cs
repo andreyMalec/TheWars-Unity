@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
 
 public sealed class Simulation {
-    private readonly List<ISystem> _systems = new List<ISystem>();
-    private readonly CommandQueue _commandQueue = new CommandQueue();
+    public const int TickRate = 60;
+
+    private readonly List<ISystem> _systems = new();
+    private readonly CommandQueue _commandQueue = new();
+    private readonly Dictionary<Type, List<object>> _listeners = new();
 
     public Frame Frame { get; }
     public SpawnQueue SpawnQueue { get; }
@@ -39,6 +43,24 @@ public sealed class Simulation {
 
     public void EnqueueCommand(ICommand command) {
         _commandQueue.Enqueue(command);
+    }
+
+    public void Subscribe<T>(IEventListener<T> listener) where T : IEvent {
+        if (!_listeners.TryGetValue(typeof(T), out var list)) {
+            list = new List<object>();
+            _listeners.Add(typeof(T), list);
+        }
+
+        list.Add(listener);
+    }
+
+    public void Publish<T>(T e) where T : IEvent {
+        if (!_listeners.TryGetValue(typeof(T), out var list))
+            return;
+
+        foreach (var listener in list) {
+            ((IEventListener<T>)listener).OnEvent(e);
+        }
     }
 
     public void Tick() {

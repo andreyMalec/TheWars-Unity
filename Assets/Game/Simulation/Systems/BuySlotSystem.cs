@@ -5,22 +5,14 @@ public sealed class BuySlotSystem : ISystem {
 
             if (fr.TryFindBaseByTeam(request.Team, out var baseState)) {
                 var config = fr.FindConfig<BaseConfig>(baseState.ConfigId);
-                int i = 0;
-                Slot? slot = null;
-                for ( i = 0; i < baseState.Slots.Length; i++) {
-                    if (!baseState.Slots[i].IsActive) {
-                        slot  = baseState.Slots[i];
-                        break;
-                    }
-                }
-                if (slot == null) continue;
-                var cost = config.slotCost[(TurretSlot)i];
+                var cost = baseState.NextSlotCost(config, out var index);
+                if (cost == 0) continue;
                 if (baseState.Resources < cost) {
                     continue;
                 }
 
                 baseState.Resources -= cost;
-                baseState.Slots[i].IsActive = true;
+                baseState.Slots[index].IsActive = true;
             }
         }
     }

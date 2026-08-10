@@ -499,7 +499,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: TheWars.Bootstrap::GameStartup
   playerUiPrefab: {fileID: 9134745123091085447, guid: 2f8e910deb245014ab4a5adc288eb8fc, type: 3}
   configDatabase: {fileID: 11400000, guid: 267f00894bc9a0142a075350d6dd0c39, type: 2}
-  tickRate: 60
   initialBasePositions:
   - {x: -3, y: 0}
   - {x: 3, y: 0}

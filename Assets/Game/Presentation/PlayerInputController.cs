@@ -11,9 +11,9 @@ public class PlayerInputController : MonoBehaviour {
     public event Action<MenuState> OnMenuStateChanged;
 
     private MenuState _menu = MenuState.Main;
-    private MenuState Menu {
+    public MenuState Menu {
         get => _menu;
-        set {
+        private set {
             _menu = value;
             OnMenuStateChanged?.Invoke(_menu);
         }
