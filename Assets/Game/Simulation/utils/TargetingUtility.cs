@@ -7,7 +7,7 @@ public static class TargetingUtility {
 
         foreach (var pair in frame.Units) {
             var unit = pair.Value;
-            if (unit.Team == team || unit.Health <= 0) {
+            if (unit.Team == team || !unit.IsAlive) {
                 continue;
             }
 
@@ -43,7 +43,7 @@ public static class TargetingUtility {
  
         foreach (var pair in frame.Units) {
             var unit = pair.Value;
-            if (unit.Team == team || unit.Health <= 0) {
+            if (unit.Team == team || !unit.IsAlive) {
                 continue;
             }
 

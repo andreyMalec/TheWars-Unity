@@ -97,8 +97,8 @@ public sealed class Frame {
     }
 
     public bool IsAlive(int entityId) {
-        if (Units.ContainsKey(entityId)) {
-            return true;
+        if (Units.TryGetValue(entityId, out var unit)) {
+            return unit.IsAlive;
         }
 
         if (Bases.ContainsKey(entityId)) {

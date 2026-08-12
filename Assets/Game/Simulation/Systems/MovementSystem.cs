@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public sealed class MovementSystem : ISystem {
@@ -6,7 +7,7 @@ public sealed class MovementSystem : ISystem {
 
     public void Run(Simulation s, Frame fr) {
         var dt = fr.DeltaTime;
-        var sortedIds = new List<int>(fr.Units.Keys);
+        var sortedIds = new List<int>(fr.Units.Values.Where(u => u.IsAlive).Select(u => u.Id));
         sortedIds.Sort();
 
         var unitRadii = new Dictionary<int, float>(sortedIds.Count);
@@ -43,9 +44,9 @@ public sealed class MovementSystem : ISystem {
             if (CanMoveTo(fr, state.Team, state.Position, desired, id, unitRadii[id], unitColliders[id], direction, sortedIds, unitRadii, unitColliders, unitDirections, startPositions,
                     resolvedPositions)) {
                 state.Position = desired;
-                state.Moving = true;
+                state.IsMoving = true;
             } else {
-                state.Moving = false;
+                state.IsMoving = false;
             }
 
             resolvedPositions[id] = state.Position;

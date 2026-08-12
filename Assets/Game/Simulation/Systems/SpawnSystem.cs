@@ -45,6 +45,7 @@ public sealed class SpawnSystem : ISystem {
                 Health = config.maxHealth,
                 MaxHealth = config.maxHealth,
                 TargetEntityId = 0,
+                IsAlive = true,
                 Attack = new AttackState() {
                     CooldownTick = fr.Tick + 1,
                 }

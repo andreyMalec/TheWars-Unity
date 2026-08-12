@@ -6,13 +6,14 @@ public sealed class WeaponSystem : ISystem {
 
         foreach (var pair in fr.Units) {
             var unit = pair.Value;
+            if (!unit.IsAlive) continue;
             var config = fr.FindConfig<UnitConfig>(unit.ConfigId);
 
             // 1. Выполнить уже начатую атаку
             if (unit.Attack.ExecuteTick > 0 && fr.Tick >= unit.Attack.ExecuteTick) {
                 ExecuteAttack(s, fr, unit, config);
                 unit.Attack.ExecuteTick = 0;
-                unit.Attack.CooldownTick = fr.Tick + config.attackIntervalTicks;
+                unit.Attack.CooldownTick = fr.Tick + config.attackTicks.cooldownInterval;
                 continue;
             }
 
@@ -25,13 +26,32 @@ public sealed class WeaponSystem : ISystem {
                 continue;
             }
 
-            var range = config.attackRange * config.attackRange;
-            if ((targetPosition - unit.Position).sqrMagnitude > range)
-                continue;
+            var attackTicks = config.attackTicks.executeStandingMelee;
+            AttackType attackType = AttackType.StandingMelee;
+            var meleeRange = config.attackRangeMelee * config.attackRangeMelee;
+            var toTarget = (targetPosition - unit.Position).sqrMagnitude;
+            if (config.attackType == UnitAttackType.Melee) {
+                if (toTarget > meleeRange)
+                    continue;
+            } else {
+                var rangedRange = config.attackRangeRanged * config.attackRangeRanged;
+                if (toTarget > rangedRange)
+                    continue;
+
+                if (toTarget <= rangedRange && toTarget > meleeRange) {
+                    if (unit.IsMoving) {
+                        attackType = AttackType.WalkingRanged;
+                        attackTicks = config.attackTicks.executeWalkingRanged;
+                    } else {
+                        attackType = AttackType.StandingRanged;
+                        attackTicks = config.attackTicks.executeStandingRanged;
+                    }
+                }
+            }
 
             // Начинаем атаку
-            unit.Attack.ExecuteTick = fr.Tick + config.attackExecuteTick;
-            s.Publish(new AttackStartedEvent(unit.Id));
+            unit.Attack.ExecuteTick = fr.Tick + attackTicks;
+            s.Events.Publish(new UnitEvent.AttackStarted(unit.Id, attackType));
         }
 
         foreach (var pair in fr.Turrets) {

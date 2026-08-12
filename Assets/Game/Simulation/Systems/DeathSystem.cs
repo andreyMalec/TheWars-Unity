@@ -3,6 +3,7 @@ using UnityEngine;
 
 public sealed class DeathSystem : ISystem {
     private readonly List<int> _removeBuffer = new List<int>();
+    private const int CorpseTicks = 2 * Simulation.TickRate;
 
     public void Run(Simulation s, Frame fr) {
         while (s.ProjectileRemovalRequests.Count > 0) {
@@ -10,9 +11,13 @@ public sealed class DeathSystem : ISystem {
         }
 
         _removeBuffer.Clear();
-        foreach (var pair in fr.Units) {
-            if (pair.Value.Health <= 0) {
-                _removeBuffer.Add(pair.Key);
+        foreach (var (id, unit) in fr.Units) {
+            if (unit.Health <= 0 && unit.IsAlive) {
+                unit.IsAlive = false;
+                unit.DeathTick = fr.Tick;
+                s.Events.Publish(new UnitEvent.DeathStarted(unit.Id));
+            } else if (!unit.IsAlive && unit.DeathTick + CorpseTicks <= fr.Tick) {
+                _removeBuffer.Add(id);
             }
         }
 

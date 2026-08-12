@@ -18,9 +18,10 @@ MonoBehaviour:
   cost: 20
   maxHealth: 50
   speed: 0.3
-  damage: 20
+  damage: 1
   attackInterval: 0.75
-  attackRange: 1
+  attackRangeMelee: 0.1839002
+  attackRangeRanged: 2
   projectilePrefab: {fileID: 9172579707124366618, guid: 9466c251b2ed287418a1421cf3ae8df2, type: 3}
   collider:
   - {x: -0.003181288, y: 0.18387268}
@@ -32,7 +33,10 @@ MonoBehaviour:
   colliderBox:
   - {x: -0.08231217, y: -0.15811801}
   - {x: 0.049365364, y: 0.18387268}
-  attackIntervalTicks: 45
-  attackExecuteTick: 0
+  attackTicks:
+    cooldownInterval: 45
+    executeStandingMelee: 36
+    executeStandingRanged: 48
+    executeWalkingRanged: 72
   projectilePosition: {x: 0.069, y: 0.1}
   prefab: {fileID: 9172579707124366618, guid: 954a7e8962ca97a47a4ea19d0f018704, type: 3}

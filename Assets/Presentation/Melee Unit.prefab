@@ -217,6 +217,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: TheWars.Presentation::UnitView
   EntityId: 0
   unitConfig: {fileID: 11400000, guid: 27644e0067929d74099bf5fe976a66a6, type: 2}
+  animationConfig:
+    Idle: {fileID: 7400000, guid: 4221735ee0398834eb28f77a9b90b70e, type: 2}
+    StandingMeleeAttack: {fileID: 7400000, guid: 578f160847155784c8cdd90c4022d0e0, type: 2}
+    StandingRangedAttack: {fileID: 0}
+    Walking: {fileID: 7400000, guid: 0fd7dfc8725296b459ed700960965850, type: 2}
+    WalkingRangedAttack: {fileID: 0}
+    Death: {fileID: 7400000, guid: 945164e58d3fdde4b803813cf6579874, type: 2}
 --- !u!114 &8685639325986157679
 MonoBehaviour:
   m_ObjectHideFlags: 0

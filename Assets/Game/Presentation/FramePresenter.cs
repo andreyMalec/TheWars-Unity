@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class FramePresenter : MonoBehaviour, IEventListener<AttackStartedEvent> {
+public sealed class FramePresenter : MonoBehaviour, IEventListener<UnitEvent> {
     private readonly Dictionary<int, BaseView> _baseViews = new Dictionary<int, BaseView>();
     private readonly Dictionary<int, UnitView> _unitViews = new Dictionary<int, UnitView>();
     private readonly Dictionary<int, TurretView> _turretViews = new Dictionary<int, TurretView>();
@@ -15,7 +15,7 @@ public sealed class FramePresenter : MonoBehaviour, IEventListener<AttackStarted
     public void Initialize(Simulation simulation, PlayerUiView uiView) {
         _simulation = simulation;
         _uiView = uiView;
-        _simulation.Subscribe(this);
+        _simulation.Events.Subscribe(this);
     }
 
     private void LateUpdate() {
@@ -26,9 +26,9 @@ public sealed class FramePresenter : MonoBehaviour, IEventListener<AttackStarted
         PresentProjectiles();
     }
 
-    public void OnEvent(AttackStartedEvent e) {
+    public void OnEvent(UnitEvent e) {
         if (!_unitViews.TryGetValue(e.EntityId, out var view)) return;
-        view.PlayAttackAnimation();
+        view.OnEvent(e);
     }
 
     private void PresentBases() {

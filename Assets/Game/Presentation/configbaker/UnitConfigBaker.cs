@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using JetBrains.Annotations;
 using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
@@ -40,20 +41,24 @@ public class UnitConfigBaker : MonoBehaviour {
         collider.enabled = false;
 
         unitConfig.projectilePosition = _ranged ? projectilePosition.localPosition : Vector2.zero;
-        var animator = GetComponentInChildren<Animator>();
-        if (animator == null) return;
-        var clips = animator.runtimeAnimatorController.animationClips;
-        for (int i = 0; i < clips.Length; i++) {
-            var clip = clips[i];
-            var events = AnimationUtility.GetAnimationEvents(clip);
-            for (int j = 0; j < events.Length; j++) {
-                var e = events[j];
-                if (e.functionName == "Execute") {
-                    unitConfig.attackExecuteTick = Mathf.RoundToInt(e.time  * Simulation.TickRate);
-                    break;
-                }
+
+        var view = GetComponent<UnitView>();
+        unitConfig.attackTicks.executeStandingMelee = ExecuteTicks(view.animationConfig.StandingMeleeAttack);
+        unitConfig.attackTicks.executeStandingRanged = ExecuteTicks(view.animationConfig.StandingRangedAttack);
+        unitConfig.attackTicks.executeWalkingRanged = ExecuteTicks(view.animationConfig.WalkingRangedAttack);
+    }
+
+    private int ExecuteTicks([CanBeNull] AnimationClip clip) {
+        if (clip == null) return 1;
+        var events = AnimationUtility.GetAnimationEvents(clip);
+        for (int j = 0; j < events.Length; j++) {
+            var e = events[j];
+            if (e.functionName == "Execute") {
+                return Mathf.RoundToInt(e.time * Simulation.TickRate);
             }
         }
+
+        return 1;
     }
 
     private void OnDrawGizmos() {
@@ -62,13 +67,19 @@ public class UnitConfigBaker : MonoBehaviour {
         var mirrored = transform.localScale.x < 0f;
         var origin = (Vector2)transform.position;
         var rangeDirection = mirrored ? -1f : 1f;
-        var projectileLocal = unitConfig.projectilePosition;
-        var projectileStart = UnitColliderUtility.ToWorldPoint(projectileLocal, origin, mirrored);
 
-        Gizmos.color = Color.deepSkyBlue;
-        Gizmos.DrawLine(
-            new Vector3(projectileStart.x, projectileStart.y, 0f),
-            new Vector3(projectileStart.x + unitConfig.attackRange * rangeDirection, projectileStart.y, 0f));
+        if (unitConfig.attackType == UnitAttackType.Ranged) {
+            var projectileLocal = unitConfig.projectilePosition;
+            var projectileStart = UnitColliderUtility.ToWorldPoint(projectileLocal, origin, mirrored);
+            Gizmos.color = Color.deepSkyBlue;
+            Gizmos.DrawLine(
+                new Vector3(projectileStart.x, projectileStart.y, 0f),
+                new Vector3(projectileStart.x + unitConfig.attackRangeRanged * rangeDirection, projectileStart.y, 0f));
+        }
+
+        Gizmos.color = Color.lightSkyBlue;
+        Gizmos.DrawLine(transform.position,
+            new Vector3(origin.x + unitConfig.attackRangeMelee * rangeDirection, origin.y, 0f));
 
         Gizmos.color = Color.red;
         for (int i = 0; i < unitConfig.collider.Length - 1; i++) {

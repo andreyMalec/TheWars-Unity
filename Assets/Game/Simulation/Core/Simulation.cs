@@ -6,9 +6,9 @@ public sealed class Simulation {
 
     private readonly List<ISystem> _systems = new();
     private readonly CommandQueue _commandQueue = new();
-    private readonly Dictionary<Type, List<object>> _listeners = new();
 
     public Frame Frame { get; }
+    public EventBus Events { get; }
     public SpawnQueue SpawnQueue { get; }
     public readonly Queue<BuildTurretRequest> BuildTurretRequests = new();
     public readonly Queue<DestroyTurretRequest> DestroyTurretRequests = new();
@@ -21,6 +21,7 @@ public sealed class Simulation {
     public Simulation(ConfigDatabase configDatabase, int tickRate) {
         Frame = new Frame(1f / tickRate, configDatabase);
         SpawnQueue = new SpawnQueue();
+        Events = new EventBus();
 
         _systems.Add(new EconomySystem());
         _systems.Add(new BuildTurretSystem());
@@ -43,24 +44,6 @@ public sealed class Simulation {
 
     public void EnqueueCommand(ICommand command) {
         _commandQueue.Enqueue(command);
-    }
-
-    public void Subscribe<T>(IEventListener<T> listener) where T : IEvent {
-        if (!_listeners.TryGetValue(typeof(T), out var list)) {
-            list = new List<object>();
-            _listeners.Add(typeof(T), list);
-        }
-
-        list.Add(listener);
-    }
-
-    public void Publish<T>(T e) where T : IEvent {
-        if (!_listeners.TryGetValue(typeof(T), out var list))
-            return;
-
-        foreach (var listener in list) {
-            ((IEventListener<T>)listener).OnEvent(e);
-        }
     }
 
     public void Tick() {
