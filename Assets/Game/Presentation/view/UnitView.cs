@@ -9,6 +9,8 @@ public sealed class UnitView : MonoBehaviour {
 
     private static readonly int Walking = Animator.StringToHash("Walking");
     private static readonly int Death = Animator.StringToHash("Death");
+    private static readonly int Alive = Animator.StringToHash("Alive");
+    private static readonly int Ranged = Animator.StringToHash("Ranged");
 
     private static readonly int Debug_Restore = Animator.StringToHash("restore");
 
@@ -19,6 +21,7 @@ public sealed class UnitView : MonoBehaviour {
     private Animator _animator;
     private AnimatorOverrideController _animatorController;
     private bool _animated;
+    private UnitState _state;
 
     private void Awake() {
         _renderer = GetComponentInChildren<SpriteRenderer>();
@@ -36,6 +39,7 @@ public sealed class UnitView : MonoBehaviour {
         name = unitConfig.name + "_" + entityId;
 
         if (_animated) {
+            _animator.SetBool(Ranged, unitConfig.attackType == UnitAttackType.Ranged);
             _animatorController["_Idle"] = animationConfig.Idle;
             _animatorController["_StandingMeleeAttack"] = animationConfig.StandingMeleeAttack;
             _animatorController["_StandingRangedAttack"] = animationConfig.StandingRangedAttack;
@@ -46,17 +50,24 @@ public sealed class UnitView : MonoBehaviour {
     }
 
     public void Present(in UnitState state) {
+        _state = state;
         var scaleX = state.Direction == UnitDirection.Left ? -1f : 1f;
         transform.localScale = new Vector3(scaleX, 1f, 1f);
 
-        transform.position = new Vector3(state.Position.x, state.Position.y, state.Position.x);
-        if (_animated)
+        if (state.IsAlive)
+            transform.position = new Vector3(state.Position.x, state.Position.y, state.Position.x);
+        else
+            transform.position = new Vector3(state.Position.x, state.Position.y, 5f);
+        if (_animated) {
             _animator.SetBool(Walking, state.IsMoving);
+            _animator.SetBool(Alive, state.IsAlive);
+        }
     }
 
     public void OnEvent(UnitEvent e) {
         switch (e) {
             case UnitEvent.AttackStarted attack:
+                if (!_state.IsAlive) return;
                 switch (attack.AttackType) {
                     case AttackType.StandingMelee: PlayAttackAnimation(StandingMeleeAttack); break;
                     case AttackType.StandingRanged: PlayAttackAnimation(StandingRangedAttack); break;

@@ -13,13 +13,25 @@ public sealed class WeaponSystem : ISystem {
             if (unit.Attack.ExecuteTick > 0 && fr.Tick >= unit.Attack.ExecuteTick) {
                 ExecuteAttack(s, fr, unit, config);
                 unit.Attack.ExecuteTick = 0;
-                unit.Attack.CooldownTick = fr.Tick + config.attackTicks.cooldownInterval;
+                var recovery = 0;
+                switch (unit.Attack.AttackType) {
+                    case AttackType.StandingMelee:
+                        recovery = config.attackTicks.recoveryStandingMelee;
+                        break;
+                    case AttackType.WalkingRanged:
+                        recovery = config.attackTicks.recoveryWalkingRanged;
+                        break;
+                    case AttackType.StandingRanged:
+                        recovery = config.attackTicks.recoveryStandingRanged;
+                        break;
+                }
+                unit.Attack.RecoveryTick = fr.Tick + recovery;
                 continue;
             }
 
             // 2. Если сейчас готова новая атака
             if (unit.Attack.ExecuteTick > 0) continue;
-            if (unit.Attack.CooldownTick > fr.Tick) continue;
+            if (unit.Attack.RecoveryTick > fr.Tick) continue;
             if (unit.TargetEntityId == 0) continue;
             if (!fr.TryGetEntityPositionAndTeam(unit.TargetEntityId, out var targetPosition, out _)) {
                 unit.TargetEntityId = 0;
@@ -51,6 +63,7 @@ public sealed class WeaponSystem : ISystem {
 
             // Начинаем атаку
             unit.Attack.ExecuteTick = fr.Tick + attackTicks;
+            unit.Attack.AttackType = attackType;
             s.Events.Publish(new UnitEvent.AttackStarted(unit.Id, attackType));
         }
 

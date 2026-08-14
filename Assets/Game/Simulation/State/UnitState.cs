@@ -21,6 +21,11 @@ public sealed class UnitState : Damageable {
 }
 
 public struct AttackState {
-    public int CooldownTick;
+    public int RecoveryTick;
     public int ExecuteTick;
+    public AttackType AttackType;
+
+    public bool IsAttacking(Frame fr) {
+        return ExecuteTick > 0 || RecoveryTick > fr.Tick;
+    }
 }

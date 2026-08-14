@@ -44,8 +44,14 @@ public class UnitConfigBaker : MonoBehaviour {
 
         var view = GetComponent<UnitView>();
         unitConfig.attackTicks.executeStandingMelee = ExecuteTicks(view.animationConfig.StandingMeleeAttack);
+        unitConfig.attackTicks.recoveryStandingMelee = RecoveryTicks(view.animationConfig.StandingMeleeAttack) - unitConfig.attackTicks.executeStandingMelee;
         unitConfig.attackTicks.executeStandingRanged = ExecuteTicks(view.animationConfig.StandingRangedAttack);
+        unitConfig.attackTicks.recoveryStandingRanged = RecoveryTicks(view.animationConfig.StandingRangedAttack) - unitConfig.attackTicks.executeStandingRanged;
         unitConfig.attackTicks.executeWalkingRanged = ExecuteTicks(view.animationConfig.WalkingRangedAttack);
+        unitConfig.attackTicks.recoveryWalkingRanged = RecoveryTicks(view.animationConfig.WalkingRangedAttack) - unitConfig.attackTicks.executeWalkingRanged;
+
+        var renderer = GetComponentInChildren<SpriteRenderer>();
+        unitConfig.movementCenter = renderer.sprite.pivot / renderer.sprite.pixelsPerUnit * 0.8f;
     }
 
     private int ExecuteTicks([CanBeNull] AnimationClip clip) {
@@ -59,6 +65,11 @@ public class UnitConfigBaker : MonoBehaviour {
         }
 
         return 1;
+    }
+
+    private int RecoveryTicks([CanBeNull] AnimationClip clip) {
+        if (clip == null) return 1;
+        return Mathf.RoundToInt(clip.length * Simulation.TickRate);
     }
 
     private void OnDrawGizmos() {
@@ -76,6 +87,10 @@ public class UnitConfigBaker : MonoBehaviour {
                 new Vector3(projectileStart.x, projectileStart.y, 0f),
                 new Vector3(projectileStart.x + unitConfig.attackRangeRanged * rangeDirection, projectileStart.y, 0f));
         }
+
+        Gizmos.color = Color.darkGoldenRod;
+        Gizmos.DrawWireSphere(new Vector3(origin.x, origin.y - unitConfig.movementCenter.y, 0f),
+            unitConfig.movementCenter.x);
 
         Gizmos.color = Color.lightSkyBlue;
         Gizmos.DrawLine(transform.position,

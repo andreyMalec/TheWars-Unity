@@ -47,7 +47,7 @@ public sealed class SpawnSystem : ISystem {
                 TargetEntityId = 0,
                 IsAlive = true,
                 Attack = new AttackState() {
-                    CooldownTick = fr.Tick + 1,
+                    RecoveryTick = fr.Tick + 1,
                 }
             };
 
