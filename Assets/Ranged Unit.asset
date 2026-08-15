@@ -17,6 +17,7 @@ MonoBehaviour:
   attackType: 1
   cost: 20
   maxHealth: 50
+  spawnTicks: 200
   speed: 0.3
   damage: 20
   attackRangeMelee: 0.1839002

@@ -1,46 +1,55 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public sealed class SpawnQueue {
-    private readonly Dictionary<EntityType, Queue<SpawnUnitRequest>> _pendingLeft = new();
-    private readonly Dictionary<EntityType, Queue<SpawnUnitRequest>> _pendingRight = new();
+    private readonly List<SpawnUnitRequest> _pendingLeft = new();
+    private readonly List<SpawnUnitRequest> _pendingRight = new();
 
     public SpawnQueue() {
-        foreach (EntityType unitType in Enum.GetValues(typeof(EntityType))) {
-            _pendingLeft[unitType] = new Queue<SpawnUnitRequest>();
-            _pendingRight[unitType] = new Queue<SpawnUnitRequest>();
-        }
     }
 
     public void Enqueue(SpawnUnitRequest request) {
         if (request.Team == Team.Left) {
-            _pendingLeft[request.EntityType].Enqueue(request);
+            _pendingLeft.Add(request);
         } else if (request.Team == Team.Right) {
-            _pendingRight[request.EntityType].Enqueue(request);
+            _pendingRight.Add(request);
+        }
+    }
+
+    public int Count(Team team) {
+        if (team == Team.Left) {
+            return _pendingLeft.Count;
+        } else {
+            return _pendingRight.Count;
         }
     }
 
     public int Count(Team team, EntityType entityType) {
         if (team == Team.Left) {
-            return _pendingLeft[entityType].Count;
+            return _pendingLeft.Count(request => request.EntityType == entityType);
         } else {
-            return _pendingRight[entityType].Count;
+            return _pendingRight.Count(request => request.EntityType == entityType);
         }
     }
 
-    public SpawnUnitRequest Peek(Team team, EntityType entityType) {
+    public SpawnUnitRequest Peek(Team team) {
         if (team == Team.Left) {
-            return _pendingLeft[entityType].Peek();
+            return _pendingLeft.First();
         } else {
-            return _pendingRight[entityType].Peek();
+            return _pendingRight.First();
         }
     }
 
-    public SpawnUnitRequest Dequeue(Team team, EntityType entityType) {
+    public SpawnUnitRequest Dequeue(Team team) {
         if (team == Team.Left) {
-            return _pendingLeft[entityType].Dequeue();
+            var request = _pendingLeft.First();
+            _pendingLeft.RemoveAt(0);
+            return request;
         } else {
-            return _pendingRight[entityType].Dequeue();
+            var request = _pendingRight.First();
+            _pendingRight.RemoveAt(0);
+            return request;
         }
     }
 }

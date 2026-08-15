@@ -1,4 +1,3 @@
-using UnityEngine;
 
 public struct SpawnUnitRequest {
     public Team Team;

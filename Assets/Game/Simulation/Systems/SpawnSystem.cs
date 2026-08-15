@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public sealed class SpawnSystem : ISystem {
@@ -9,52 +10,61 @@ public sealed class SpawnSystem : ISystem {
 
     private void SpawnTeam(Frame fr, SpawnQueue queue, Team team) {
         if (!fr.TryFindBaseByTeam(team, out var baseState)) return;
-        var baseConfig = fr.FindConfig<BaseConfig>(baseState.ConfigId);
 
-        foreach (EntityType unitType in Enum.GetValues(typeof(EntityType))) {
-            SpawnUnitType(fr, queue, baseConfig, baseState, unitType);
+        while (queue.Count(team) > 0 ) {
+            var spawnUnitRequest = queue.Dequeue(team);
+
+            var unitConfig = fr.FindConfig<UnitConfig>(spawnUnitRequest.UnitConfigId);
+            if (baseState.Resources < unitConfig.cost) {
+                break;
+            }
+
+            baseState.Resources -= unitConfig.cost;
+            baseState.SpawnQueue.Enqueue(spawnUnitRequest);
         }
-    }
 
-    private void SpawnUnitType(
-        Frame fr, SpawnQueue queue,
-        BaseConfig baseConfig, BaseState baseState, EntityType entityType
-    ) {
-        var team = baseState.Team;
-        while (queue.Count(team, entityType) > 0) {
-            var request = queue.Peek(team, entityType);
-
-            if (IsSpawnAreaOccupied(fr, baseState, baseConfig)) {
-                break;
-            }
-
-            var config = fr.FindConfig<UnitConfig>(request.UnitConfigId);
-            if (baseState.Resources < config.cost) {
-                break;
-            }
-
-            baseState.Resources -= config.cost;
-            queue.Dequeue(team, entityType);
-
-            var state = new UnitState {
-                Id = fr.GenerateEntityId(),
-                Team = request.Team,
-                ConfigId = request.UnitConfigId,
-                Position = baseState.Position,
-                Direction = team == Team.Left ? UnitDirection.Right : UnitDirection.Left,
-                Health = config.maxHealth,
-                MaxHealth = config.maxHealth,
-                TargetEntityId = 0,
-                IsAlive = true,
-                Attack = new AttackState() {
-                    RecoveryTick = fr.Tick + 1,
-                }
+        if (baseState.SpawnQueue.Count > 0 && baseState.SpawnProgress == null) {
+            var r = baseState.SpawnQueue.Dequeue();
+            var unitConfig = fr.FindConfig<UnitConfig>(r.UnitConfigId);
+            
+            baseState.SpawnProgress = new SpawnProgress() {
+                Request = r,
+                Timer = unitConfig.spawnTicks,
+                SpawnTicks = unitConfig.spawnTicks
             };
-
-            fr.AddUnit(state);
-            Debug.Log(
-                $"[SpawnSystem] Spawned unit (Team {team}, Config {state.ConfigId}). Remaining resources: {baseState.Resources}");
         }
+        if (baseState.SpawnProgress == null) return;
+        var request = baseState.SpawnProgress.Request;
+        if (baseState.SpawnProgress.Timer > 0) {
+            baseState.SpawnProgress.Timer--;
+            return;
+        }
+
+        var baseConfig = fr.FindConfig<BaseConfig>(baseState.ConfigId);
+        if (IsSpawnAreaOccupied(fr, baseState, baseConfig)) {
+            return;
+        }
+
+        var config = fr.FindConfig<UnitConfig>(request.UnitConfigId);
+        var state = new UnitState {
+            Id = fr.GenerateEntityId(),
+            Team = request.Team,
+            ConfigId = request.UnitConfigId,
+            Position = baseState.Position,
+            Direction = team == Team.Left ? UnitDirection.Right : UnitDirection.Left,
+            Health = config.maxHealth,
+            MaxHealth = config.maxHealth,
+            TargetEntityId = 0,
+            IsAlive = true,
+            Attack = new AttackState() {
+                RecoveryTick = fr.Tick + 1,
+            }
+        };
+
+        fr.AddUnit(state);
+        Debug.Log(
+            $"[SpawnSystem] Spawned unit (Team {team}, Config {state.ConfigId}). Remaining resources: {baseState.Resources}");
+        baseState.SpawnProgress = null;
     }
 
     private static bool IsSpawnAreaOccupied(Frame frame, BaseState baseState, BaseConfig baseConfig) {

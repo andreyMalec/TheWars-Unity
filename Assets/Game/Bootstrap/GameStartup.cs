@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder(-10000)]
@@ -42,7 +43,8 @@ public sealed class GameStartup : MonoBehaviour {
                 Health = config.startHealth,
                 Epoch = Epoch.StoneAge,
                 Resources = config.startResources,
-                Slots = new Slot[config.slotPositions.Length]
+                Slots = new Slot[config.slotPositions.Length],
+                SpawnQueue = new Queue<SpawnUnitRequest>()
             };
             for (int j = 0; j < state.Slots.Length; j++) {
                 state.Slots[j] = new Slot();

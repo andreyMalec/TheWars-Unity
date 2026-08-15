@@ -23,7 +23,7 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig, TypedEntity {
     public UnitAttackType attackType;
     public int cost;
     public int maxHealth;
-
+    public int spawnTicks;
     public float speed;
     public int damage;
     public float attackRangeMelee;

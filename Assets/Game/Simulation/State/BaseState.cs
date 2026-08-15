@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Slot {
@@ -6,6 +7,12 @@ public class Slot {
     public bool HasTurret;
     public int TurretId;
     public ConfigId TurretConfigId;
+}
+
+public class SpawnProgress {
+    public SpawnUnitRequest Request;
+    public int Timer;
+    public int SpawnTicks;
 }
 
 public sealed class BaseState : Damageable {
@@ -18,6 +25,8 @@ public sealed class BaseState : Damageable {
     public int Resources { get; set; }
     public Vector2 Position { get; set; }
     public Slot[] Slots { get; set; }
+    public Queue<SpawnUnitRequest> SpawnQueue;
+    public SpawnProgress SpawnProgress;
 
     public int NextSlotCost(BaseConfig config, out int index) {
         for (var i = 0; i < Slots.Length; i++) {

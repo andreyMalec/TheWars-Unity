@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -74,22 +75,7 @@ public class PlayerUiView : MonoBehaviour {
                 actionButtons[3].SetData(data.destroyTurret);
                 break;
             case PlayerInputController.MenuState.SpawnUnit:
-                for (int i = 0; i < actionButtons.Length; i++) {
-                    actionButtons[i].gameObject.SetActive(true);
-                    var unitConfig = _db.GetConfig<UnitConfig>(_state.Epoch, (EntityType)i);
-                    if (unitConfig != null) {
-                        var sprite = unitConfig.prefab.GetComponentInChildren<SpriteRenderer>().sprite;
-                        var button = new ButtonData() {
-                            image = sprite,
-                            badge = data.empty.badge,
-                            text = unitConfig.cost.ToString(),
-                        };
-                        actionButtons[i].SetData(button);
-                    } else {
-                        actionButtons[i].gameObject.SetActive(false);
-                    }
-                }
-
+                SpawnUnitState();
                 break;
             case PlayerInputController.MenuState.BuyTurret:
                 for (int i = 0; i < actionButtons.Length; i++) {
@@ -173,6 +159,45 @@ public class PlayerUiView : MonoBehaviour {
                 }
 
                 break;
+        }
+    }
+
+    private void SpawnUnitState() {
+        for (int i = 0; i < actionButtons.Length; i++) {
+            actionButtons[i].gameObject.SetActive(true);
+            var unitConfig = _db.GetConfig<UnitConfig>(_state.Epoch, (EntityType)i);
+            if (unitConfig != null) {
+                var sprite = unitConfig.prefab.GetComponentInChildren<SpriteRenderer>().sprite;
+                if (_state.SpawnQueue.Count > 0 || _state.SpawnProgress != null) {
+                    float progress = 1;
+                    var queueCount = _state.SpawnQueue.Count(it => it.EntityType == (EntityType)i);
+                    var spawnInProgress = _state.SpawnProgress != null &&
+                                          _state.SpawnProgress.Request.EntityType == (EntityType)i;
+                    if (spawnInProgress) {
+                        progress = Mathf.Clamp01(_state.SpawnProgress.Timer /
+                                                 (float)_state.SpawnProgress.SpawnTicks);
+                    }
+
+                    var button = new ButtonData() {
+                        image = sprite,
+                        badge = data.empty.badge,
+                        text = unitConfig.cost.ToString(),
+                        spawnInProgress = spawnInProgress || queueCount > 0,
+                        queueCount = queueCount,
+                        queueProgress = progress,
+                    };
+                    actionButtons[i].SetData(button);
+                } else {
+                    var button = new ButtonData() {
+                        image = sprite,
+                        badge = data.empty.badge,
+                        text = unitConfig.cost.ToString(),
+                    };
+                    actionButtons[i].SetData(button);
+                }
+            } else {
+                actionButtons[i].gameObject.SetActive(false);
+            }
         }
     }
 }
