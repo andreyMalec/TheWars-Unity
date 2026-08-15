@@ -135,5 +135,87 @@ public static class UnitColliderUtility {
 
         return inside;
     }
-}
+    
+    public static bool RayPolygonIntersection(
+        Vector2 rayOrigin,
+        Vector2 rayDirection,
+        bool mirrored,
+        Vector2 polygonPosition,
+        Vector2[] polygon,
+        out Vector2 intersection)
+    {
+        intersection = default;
 
+        if (rayDirection.sqrMagnitude < Mathf.Epsilon || polygon == null || polygon.Length < 2)
+            return false;
+
+        rayDirection.Normalize();
+
+        float closestDistance = float.PositiveInfinity;
+        bool found = false;
+
+        for (int i = 0; i < polygon.Length; i++)
+        {
+            Vector2 a = ToWorldPoint(polygon[i], polygonPosition, mirrored);
+            Vector2 b = ToWorldPoint( polygon[(i + 1) % polygon.Length], polygonPosition, mirrored);
+
+            if (RaySegmentIntersection(
+                    rayOrigin,
+                    rayDirection,
+                    a,
+                    b,
+                    out Vector2 point,
+                    out float distance))
+            {
+                if (distance >= 0f && distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    intersection = point;
+                    found = true;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    private static bool RaySegmentIntersection(
+        Vector2 rayOrigin,
+        Vector2 rayDirection,
+        Vector2 segmentA,
+        Vector2 segmentB,
+        out Vector2 point,
+        out float rayDistance)
+    {
+        point = default;
+        rayDistance = 0f;
+
+        Vector2 segmentDirection = segmentB - segmentA;
+
+        float cross = Cross(rayDirection, segmentDirection);
+
+        // Луч и ребро параллельны
+        if (Mathf.Abs(cross) < 0.000001f)
+            return false;
+
+        Vector2 delta = segmentA - rayOrigin;
+
+        float t = Cross(delta, segmentDirection) / cross;
+        float u = Cross(delta, rayDirection) / cross;
+
+        // t — расстояние вдоль луча
+        // u — положение на отрезке [0..1]
+        if (t < 0f || u < 0f || u > 1f)
+            return false;
+
+        point = rayOrigin + rayDirection * t;
+        rayDistance = t;
+
+        return true;
+    }
+
+    private static float Cross(Vector2 a, Vector2 b)
+    {
+        return a.x * b.y - a.y * b.x;
+    }
+}

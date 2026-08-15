@@ -17,6 +17,7 @@ public sealed class UnitView : MonoBehaviour {
     public int EntityId;
     public UnitConfig unitConfig;
     public UnitAnimationConfig animationConfig;
+    [SerializeField] private GameObject onHitPrefab;
     private SpriteRenderer _renderer;
     private Animator _animator;
     private AnimatorOverrideController _animatorController;
@@ -77,6 +78,10 @@ public sealed class UnitView : MonoBehaviour {
                 break;
             case UnitEvent.DeathStarted:
                 PlayDeathAnimation();
+                break;
+            case UnitEvent.DamageTaken damageTaken:
+                var hit = Instantiate(onHitPrefab, damageTaken.HitPoint, Quaternion.identity);
+                hit.transform.SetParent(transform);
                 break;
         }
     }

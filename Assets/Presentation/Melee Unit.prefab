@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 422656699140937052, guid: 880ec743602b9894c9e70e752d6464e0, type: 3}
+  m_Sprite: {fileID: 928183631, guid: 96a2b1c7e14b8d842bfc3a1b87945e58, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -224,6 +224,7 @@ MonoBehaviour:
     Walking: {fileID: 7400000, guid: 0fd7dfc8725296b459ed700960965850, type: 2}
     WalkingRangedAttack: {fileID: 0}
     Death: {fileID: 7400000, guid: 945164e58d3fdde4b803813cf6579874, type: 2}
+  onHitPrefab: {fileID: 6476507596159279003, guid: 3d4679a5e4ee5e94c86c18e349a70905, type: 3}
 --- !u!114 &8685639325986157679
 MonoBehaviour:
   m_ObjectHideFlags: 0

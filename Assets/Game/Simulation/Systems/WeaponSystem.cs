@@ -25,6 +25,7 @@ public sealed class WeaponSystem : ISystem {
                         recovery = config.attackTicks.recoveryStandingRanged;
                         break;
                 }
+
                 unit.Attack.RecoveryTick = fr.Tick + recovery;
                 continue;
             }
@@ -122,9 +123,8 @@ public sealed class WeaponSystem : ISystem {
         UnitState unit,
         UnitConfig config
     ) {
+        fr.TryGetEntityPositionAndTeam(unit.TargetEntityId, out var targetPosition, out _);
         if (config.attackType == UnitAttackType.Ranged) {
-            fr.TryGetEntityPositionAndTeam(unit.TargetEntityId, out var targetPosition, out _);
-
             var direction = (targetPosition - unit.Position).normalized;
 
             var projectilePosition = UnitColliderUtility.ToWorldPoint(
@@ -154,6 +154,7 @@ public sealed class WeaponSystem : ISystem {
                 TargetEntityId = unit.TargetEntityId,
                 Amount = config.damage
             });
+            s.Events.Publish(new UnitEvent.DamageTaken(unit.TargetEntityId, targetPosition));
         }
     }
 }

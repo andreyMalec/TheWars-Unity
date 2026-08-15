@@ -126,25 +126,13 @@ public sealed class Frame {
         return false;
     }
 
-    public bool TryGetEntityPositionTeamAndRadius(int entityId, out Vector2 position, out Team team, out float radius) {
-        if (Units.TryGetValue(entityId, out var unit)) {
-            position = unit.Position;
-            team = unit.Team;
-            var config = FindConfig<UnitConfig>(unit.ConfigId);
-            radius = UnitColliderUtility.GetRadius(config);
+    public bool TryGetUnit(int entityId, out UnitState unit, out UnitConfig config) {
+        if (Units.TryGetValue(entityId, out unit)) {
+            config = FindConfig<UnitConfig>(unit.ConfigId);
             return true;
         }
 
-        if (Bases.TryGetValue(entityId, out var baseState)) {
-            position = baseState.Position;
-            team = baseState.Team;
-            radius = 1f;
-            return true;
-        }
-
-        position = Vector2.zero;
-        team = 0;
-        radius = 0f;
+        config = null;
         return false;
     }
 
