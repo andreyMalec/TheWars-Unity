@@ -27,3 +27,4 @@ MonoBehaviour:
   - type: TurretConfig
     items:
     - {fileID: 11400000, guid: dfecae10a26272f45b81636470e74b74, type: 2}
+    - {fileID: 11400000, guid: ecd8238d12fc3ed44965255bb6f6b901, type: 2}

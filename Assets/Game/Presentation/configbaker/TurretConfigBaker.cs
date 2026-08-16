@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class TurretConfigBaker : MonoBehaviour {
     [SerializeField] private TurretConfig turretConfig;
-    [SerializeField] private Transform projectilePosition;
+    [SerializeField] private Transform[] projectilePosition;
 
     private void OnValidate() {
         if (turretConfig == null) return;
@@ -24,7 +24,11 @@ public class TurretConfigBaker : MonoBehaviour {
 
     [Button]
     private void BakeConfigs() {
-        turretConfig.projectilePosition = projectilePosition.localPosition;
+        turretConfig.projectilePositions = projectilePosition.Select(p => p.localPosition.ToVector2()).ToArray();
+        var view = GetComponent<TurretView>();
+        view.turretConfig = turretConfig;
+
+        turretConfig.attackTicks = view.fireAnimation.AttackTicks();
     }
 
     private void OnDrawGizmos() {
@@ -32,7 +36,8 @@ public class TurretConfigBaker : MonoBehaviour {
         var mirrored = transform.lossyScale.x < 0f;
         var origin = (Vector2)transform.position;
         var rangeDirection = mirrored ? -1f : 1f;
-        var projectileLocal = turretConfig.projectilePosition;
+        if (turretConfig.projectilePositions.Length == 0) return;
+        var projectileLocal = turretConfig.projectilePositions[0];
         var projectileStart = UnitColliderUtility.ToWorldPoint(projectileLocal, origin, mirrored);
 
         Gizmos.color = Color.deepSkyBlue;

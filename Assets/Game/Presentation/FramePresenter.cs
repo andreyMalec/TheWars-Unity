@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class FramePresenter : MonoBehaviour, IEventListener<UnitEvent> {
+public sealed class FramePresenter : MonoBehaviour, IEventListener<UnitEvent>, IEventListener<TurretEvent> {
     private readonly Dictionary<int, BaseView> _baseViews = new Dictionary<int, BaseView>();
     private readonly Dictionary<int, UnitView> _unitViews = new Dictionary<int, UnitView>();
     private readonly Dictionary<int, TurretView> _turretViews = new Dictionary<int, TurretView>();
@@ -15,7 +15,8 @@ public sealed class FramePresenter : MonoBehaviour, IEventListener<UnitEvent> {
     public void Initialize(Simulation simulation, PlayerUiView uiView) {
         _simulation = simulation;
         _uiView = uiView;
-        _simulation.Events.Subscribe(this);
+        _simulation.Events.Subscribe((IEventListener<UnitEvent>)this);
+        _simulation.Events.Subscribe((IEventListener<TurretEvent>)this);
     }
 
     private void LateUpdate() {
@@ -28,6 +29,11 @@ public sealed class FramePresenter : MonoBehaviour, IEventListener<UnitEvent> {
 
     public void OnEvent(UnitEvent e) {
         if (!_unitViews.TryGetValue(e.EntityId, out var view)) return;
+        view.OnEvent(e);
+    }
+
+    public void OnEvent(TurretEvent e) {
+        if (!_turretViews.TryGetValue(e.EntityId, out var view)) return;
         view.OnEvent(e);
     }
 

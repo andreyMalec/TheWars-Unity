@@ -41,7 +41,7 @@ public sealed class UnitConfig : ScriptableObject, EntityConfig, TypedEntity {
 
     [Baked] public Vector2 movementCenter;
 
-    [Baked] public AttackTicks attackTicks;
+    [Baked] public UnitAttackTicks attackTicks;
 
     [Baked] public ConfigId projectileId;
     [Baked] [ShowIf("_ranged")] public Vector2 projectilePosition;

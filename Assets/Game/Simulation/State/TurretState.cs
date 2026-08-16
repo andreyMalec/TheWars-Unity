@@ -15,5 +15,8 @@ public sealed class TurretState {
     public Vector2 Position;
     public float Rotation;
     public int TargetEntityId;
-    public float Cooldown;
+    public Vector2 LastTargetPosition;
+    public int RecoveryTick;
+    public int ExecuteTick;
+    public int AttackIndex;
 }

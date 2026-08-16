@@ -17,7 +17,7 @@ MonoBehaviour:
   attackType: 1
   cost: 20
   maxHealth: 50
-  spawnTicks: 200
+  spawnTicks: 100
   speed: 0.3
   damage: 20
   attackRangeMelee: 0.1839002
@@ -34,13 +34,22 @@ MonoBehaviour:
   colliderBox:
   - {x: -0.08231217, y: -0.15811801}
   - {x: 0.049365364, y: 0.18387268}
-  movementCenter: {x: 0.1, y: 0.14}
+  movementCenter: {x: 0.09600001, y: 0.136}
   attackTicks:
-    executeStandingMelee: 48
-    recoveryStandingMelee: 2
-    executeStandingRanged: 48
-    recoveryStandingRanged: 14
-    executeWalkingRanged: 72
-    recoveryWalkingRanged: 14
+    standingMelee:
+    - type: 0
+      value: 48
+    - type: 1
+      value: 2
+    standingRanged:
+    - type: 0
+      value: 48
+    - type: 1
+      value: 14
+    walkingRanged:
+    - type: 0
+      value: 72
+    - type: 1
+      value: 14
   projectilePosition: {x: 0.069, y: 0.1}
   prefab: {fileID: 9172579707124366618, guid: 954a7e8962ca97a47a4ea19d0f018704, type: 3}

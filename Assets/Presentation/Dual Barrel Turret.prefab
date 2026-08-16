@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3005901849826075014}
   m_Layer: 0
-  m_Name: ProjPos
+  m_Name: ProjPos1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,38 @@ Transform:
   m_GameObject: {fileID: 2803348474428962328}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.082, y: 0.017, z: 0}
+  m_LocalPosition: {x: 0.1909, y: 0.0289, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7640560802439612021}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2906448028956086909
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2070957699288932042}
+  m_Layer: 0
+  m_Name: ProjPos2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2070957699288932042
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2906448028956086909}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.1909, y: 0.079, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41,6 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5074436407814586085}
   - component: {fileID: 3210360882557349748}
+  - component: {fileID: 6587618114288593010}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -112,7 +144,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 100
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -3558290626828947004, guid: f8fe3f2b73e8eb5408c22448829c7c52, type: 3}
+  m_Sprite: {fileID: -7219913285801759143, guid: e060c4b43636c914ea94f864882265d1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -123,6 +155,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!95 &6587618114288593010
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6545573269696437308}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8c4fd480059a15f418b8583155a31b3c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &9172579707124366618
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +189,7 @@ GameObject:
   - component: {fileID: 1275372769101334579}
   - component: {fileID: 2495914803486533230}
   m_Layer: 0
-  m_Name: Turret
+  m_Name: Dual Barrel Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,6 +209,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3005901849826075014}
+  - {fileID: 2070957699288932042}
   - {fileID: 5074436407814586085}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -171,8 +226,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: TheWars.Presentation::TurretView
   EntityId: 0
-  turretConfig: {fileID: 11400000, guid: dfecae10a26272f45b81636470e74b74, type: 2}
-  fireAnimation: {fileID: 0}
+  turretConfig: {fileID: 11400000, guid: ecd8238d12fc3ed44965255bb6f6b901, type: 2}
+  fireAnimation: {fileID: 7400000, guid: 4f90caabef5877d4193a9d5dd7de2860, type: 2}
 --- !u!114 &2495914803486533230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12d30b977164e9da1b705297d87d894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: TheWars.Presentation::TurretConfigBaker
-  turretConfig: {fileID: 11400000, guid: dfecae10a26272f45b81636470e74b74, type: 2}
+  turretConfig: {fileID: 11400000, guid: ecd8238d12fc3ed44965255bb6f6b901, type: 2}
   projectilePosition:
   - {fileID: 3005901849826075014}
+  - {fileID: 2070957699288932042}

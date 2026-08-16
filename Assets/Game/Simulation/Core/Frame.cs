@@ -126,6 +126,21 @@ public sealed class Frame {
         return false;
     }
 
+    public bool TryGetEntityPosition(int entityId, out Vector2 position) {
+        if (Units.TryGetValue(entityId, out var unit)) {
+            position = unit.Position;
+            return true;
+        }
+
+        if (Bases.TryGetValue(entityId, out var baseState)) {
+            position = baseState.Position;
+            return true;
+        }
+
+        position = Vector2.zero;
+        return false;
+    }
+
     public bool TryGetUnit(int entityId, out UnitState unit, out UnitConfig config) {
         if (Units.TryGetValue(entityId, out unit)) {
             config = FindConfig<UnitConfig>(unit.ConfigId);

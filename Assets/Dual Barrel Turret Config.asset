@@ -10,20 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25cbbfd994e74dcaba157ba2eac3d70f, type: 3}
-  m_Name: Turret Config
+  m_Name: Dual Barrel Turret Config
   m_EditorClassIdentifier: TheWars.Simulation::TurretConfig
   epoch: 0
-  entityType: 0
+  entityType: 2
   cost: 5
   attackRange: 3
-  attackInterval: 1
   damage: 10
   rotateToTarget: 1
   attackTicks:
   - type: 0
-    value: 30
+    value: 12
+  - type: 0
+    value: 12
   - type: 1
-    value: 10
+    value: 38
   projectilePrefab: {fileID: 9172579707124366618, guid: 9466c251b2ed287418a1421cf3ae8df2, type: 3}
-  projectilePosition: {x: 0.082, y: 0.017}
-  prefab: {fileID: 9172579707124366618, guid: 8cf99a8940b77de47ac586fa161d9e20, type: 3}
+  projectilePositions:
+  - {x: 0.1909, y: 0.0276}
+  - {x: 0.1909, y: 0.0811}
+  prefab: {fileID: 9172579707124366618, guid: a33fa6020e94c334e873be142eea1d27, type: 3}

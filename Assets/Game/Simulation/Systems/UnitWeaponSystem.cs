@@ -1,9 +1,7 @@
 using UnityEngine;
 
-public sealed class WeaponSystem : ISystem {
+public sealed class UnitWeaponSystem : ISystem {
     public void Run(Simulation s, Frame fr) {
-        var dt = fr.DeltaTime;
-
         foreach (var pair in fr.Units) {
             var unit = pair.Value;
             if (!unit.IsAlive) continue;
@@ -13,20 +11,26 @@ public sealed class WeaponSystem : ISystem {
             if (unit.Attack.ExecuteTick > 0 && fr.Tick >= unit.Attack.ExecuteTick) {
                 ExecuteAttack(s, fr, unit, config);
                 unit.Attack.ExecuteTick = 0;
-                var recovery = 0;
+                AttackTicks[] attacks;
                 switch (unit.Attack.AttackType) {
-                    case AttackType.StandingMelee:
-                        recovery = config.attackTicks.recoveryStandingMelee;
-                        break;
                     case AttackType.WalkingRanged:
-                        recovery = config.attackTicks.recoveryWalkingRanged;
+                        attacks = config.attackTicks.walkingRanged;
                         break;
                     case AttackType.StandingRanged:
-                        recovery = config.attackTicks.recoveryStandingRanged;
+                        attacks = config.attackTicks.standingRanged;
+                        break;
+                    default:
+                        attacks = config.attackTicks.standingMelee;
                         break;
                 }
 
-                unit.Attack.RecoveryTick = fr.Tick + recovery;
+                unit.Attack.AttackIndex++;
+                var attack = attacks[unit.Attack.AttackIndex];
+                if (attack.type == AttackTickType.Recovery) {
+                    unit.Attack.RecoveryTick = fr.Tick + attack.value;
+                    unit.Attack.AttackIndex = 0;
+                }
+
                 continue;
             }
 
@@ -39,7 +43,9 @@ public sealed class WeaponSystem : ISystem {
                 continue;
             }
 
-            var attackTicks = config.attackTicks.executeStandingMelee;
+            unit.LastTargetPosition = targetPosition;
+
+            var attackTicks = config.attackTicks.standingMelee;
             AttackType attackType = AttackType.StandingMelee;
             var meleeRange = config.attackRangeMelee * config.attackRangeMelee;
             var toTarget = (targetPosition - unit.Position).sqrMagnitude;
@@ -54,66 +60,18 @@ public sealed class WeaponSystem : ISystem {
                 if (toTarget <= rangedRange && toTarget > meleeRange) {
                     if (unit.IsMoving) {
                         attackType = AttackType.WalkingRanged;
-                        attackTicks = config.attackTicks.executeWalkingRanged;
+                        attackTicks = config.attackTicks.walkingRanged;
                     } else {
                         attackType = AttackType.StandingRanged;
-                        attackTicks = config.attackTicks.executeStandingRanged;
+                        attackTicks = config.attackTicks.standingRanged;
                     }
                 }
             }
 
             // Начинаем атаку
-            unit.Attack.ExecuteTick = fr.Tick + attackTicks;
+            unit.Attack.ExecuteTick = fr.Tick + attackTicks[unit.Attack.AttackIndex].value;
             unit.Attack.AttackType = attackType;
             s.Events.Publish(new UnitEvent.AttackStarted(unit.Id, attackType));
-        }
-
-        foreach (var pair in fr.Turrets) {
-            var turret = pair.Value;
-            var config = fr.FindConfig<TurretConfig>(turret.ConfigId);
-
-            if (turret.Cooldown > 0f) {
-                turret.Cooldown -= dt;
-            }
-
-            if (turret.TargetEntityId == 0) {
-                continue;
-            }
-
-            if (!fr.TryGetEntityPositionAndTeam(turret.TargetEntityId, out var targetPosition, out _)) {
-                continue;
-            }
-
-            var inRange = (targetPosition - turret.Position).sqrMagnitude <= config.attackRange * config.attackRange;
-            var direction = (targetPosition - turret.Position).normalized;
-            if (config.rotateToTarget)
-                turret.Rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            else
-                turret.Rotation = 0f;
-            if (!inRange || turret.Cooldown > 0f) {
-                continue;
-            }
-
-            var projectilePosition = UnitColliderUtility.ToWorldPoint(
-                config.projectilePosition,
-                turret.Position,
-                UnitColliderUtility.IsMirrored(turret.Team == Team.Left ? UnitDirection.Right : UnitDirection.Left));
-            var projConfig = fr.FindConfig<ProjectileConfig>(config.projectileId);
-            var state = new ProjectileState {
-                Id = fr.GenerateEntityId(),
-                ConfigId = projConfig.id,
-                Team = turret.Team,
-                SourceEntityId = turret.Id,
-                TargetEntityId = turret.TargetEntityId,
-                Damage = config.damage,
-                Position = projectilePosition,
-                Direction = direction,
-                Speed = projConfig.speed,
-                Lifetime = 10f
-            };
-
-            fr.AddProjectile(state);
-            turret.Cooldown = config.attackInterval > 0f ? config.attackInterval : 1f;
         }
     }
 
@@ -123,7 +81,9 @@ public sealed class WeaponSystem : ISystem {
         UnitState unit,
         UnitConfig config
     ) {
-        fr.TryGetEntityPositionAndTeam(unit.TargetEntityId, out var targetPosition, out _);
+        fr.TryGetEntityPosition(unit.TargetEntityId, out var targetPosition);
+        if (targetPosition == Vector2.zero)
+            targetPosition = unit.LastTargetPosition;
         if (config.attackType == UnitAttackType.Ranged) {
             var direction = (targetPosition - unit.Position).normalized;
 

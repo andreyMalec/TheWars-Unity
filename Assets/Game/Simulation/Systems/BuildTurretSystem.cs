@@ -21,7 +21,7 @@ public sealed class BuildTurretSystem : ISystem {
                 Position = baseConfig.slotPositions[(int)request.Slot] + baseState.Position,
                 Slot = request.Slot,
                 TargetEntityId = 0,
-                Cooldown = 0f
+                RecoveryTick = fr.Tick + 1
             };
             slot.HasTurret = true;
             slot.TurretId = state.Id;

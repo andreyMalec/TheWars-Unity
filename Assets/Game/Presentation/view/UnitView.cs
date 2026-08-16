@@ -15,7 +15,7 @@ public sealed class UnitView : MonoBehaviour {
     private static readonly int Debug_Restore = Animator.StringToHash("restore");
 
     public int EntityId;
-    public UnitConfig unitConfig;
+    [Expandable] public UnitConfig unitConfig;
     public UnitAnimationConfig animationConfig;
     [SerializeField] private GameObject onHitPrefab;
     private SpriteRenderer _renderer;

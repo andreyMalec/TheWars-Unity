@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public sealed class Simulation {
     public const int TickRate = 60;
@@ -31,7 +32,8 @@ public sealed class Simulation {
         _systems.Add(new BuySlotSystem());
         _systems.Add(new MovementSystem());
         _systems.Add(new TargetSystem());
-        _systems.Add(new WeaponSystem());
+        _systems.Add(new UnitWeaponSystem());
+        _systems.Add(new TurretWeaponSystem());
         _systems.Add(new ProjectileSystem());
         _systems.Add(new DamageSystem());
         _systems.Add(new DeathSystem());
@@ -50,7 +52,11 @@ public sealed class Simulation {
         _commandQueue.ExecuteAll(this);
 
         for (var i = 0; i < _systems.Count; i++) {
-            _systems[i].Run(this, Frame);
+            try {
+                _systems[i].Run(this, Frame);
+            } catch (Exception e) {
+                Debug.LogError(e);
+            }
         }
 
         Frame.Tick++;

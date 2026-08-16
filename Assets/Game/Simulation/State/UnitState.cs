@@ -17,6 +17,7 @@ public sealed class UnitState : Damageable {
     public int Health { get; set; }
     public int MaxHealth { get; set; }
     public int TargetEntityId { get; set; }
+    public Vector2 LastTargetPosition;
     public AttackState Attack;
 }
 
@@ -24,6 +25,7 @@ public struct AttackState {
     public int RecoveryTick;
     public int ExecuteTick;
     public AttackType AttackType;
+    public int AttackIndex;
 
     public bool IsAttacking(Frame fr) {
         return ExecuteTick > 0 || RecoveryTick > fr.Tick;

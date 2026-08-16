@@ -7,15 +7,15 @@ public sealed class TurretConfig : ScriptableObject, EntityConfig, TypedEntity {
     public EntityType entityType;
     public int cost;
     public float attackRange;
-    public float attackInterval;
     public int damage;
     public bool rotateToTarget;
 
     [Header("Baked")]
+    [Baked] public AttackTicks[] attackTicks;
     [Baked] public GameObject projectilePrefab;
 
     [Baked] public ConfigId projectileId;
-    [Baked] public Vector2 projectilePosition;
+    [Baked] public Vector2[] projectilePositions;
     [Baked] public GameObject prefab;
 
     private void OnValidate() {

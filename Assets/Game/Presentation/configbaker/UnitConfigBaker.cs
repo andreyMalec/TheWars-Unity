@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using NaughtyAttributes;
@@ -43,34 +44,14 @@ public class UnitConfigBaker : MonoBehaviour {
         unitConfig.projectilePosition = _ranged ? projectilePosition.localPosition : Vector2.zero;
 
         var view = GetComponent<UnitView>();
-        unitConfig.attackTicks.executeStandingMelee = ExecuteTicks(view.animationConfig.StandingMeleeAttack);
-        unitConfig.attackTicks.recoveryStandingMelee = RecoveryTicks(view.animationConfig.StandingMeleeAttack) - unitConfig.attackTicks.executeStandingMelee;
-        unitConfig.attackTicks.executeStandingRanged = ExecuteTicks(view.animationConfig.StandingRangedAttack);
-        unitConfig.attackTicks.recoveryStandingRanged = RecoveryTicks(view.animationConfig.StandingRangedAttack) - unitConfig.attackTicks.executeStandingRanged;
-        unitConfig.attackTicks.executeWalkingRanged = ExecuteTicks(view.animationConfig.WalkingRangedAttack);
-        unitConfig.attackTicks.recoveryWalkingRanged = RecoveryTicks(view.animationConfig.WalkingRangedAttack) - unitConfig.attackTicks.executeWalkingRanged;
+        unitConfig.attackTicks.standingMelee = view.animationConfig.StandingMeleeAttack.AttackTicks();
+        unitConfig.attackTicks.standingRanged = view.animationConfig.StandingRangedAttack.AttackTicks();
+        unitConfig.attackTicks.walkingRanged = view.animationConfig.WalkingRangedAttack.AttackTicks();
 
         var renderer = GetComponentInChildren<SpriteRenderer>();
         unitConfig.movementCenter = renderer.sprite.pivot / renderer.sprite.pixelsPerUnit * 0.8f;
     }
 
-    private int ExecuteTicks([CanBeNull] AnimationClip clip) {
-        if (clip == null) return 1;
-        var events = AnimationUtility.GetAnimationEvents(clip);
-        for (int j = 0; j < events.Length; j++) {
-            var e = events[j];
-            if (e.functionName == "Execute") {
-                return Mathf.RoundToInt(e.time * Simulation.TickRate);
-            }
-        }
-
-        return 1;
-    }
-
-    private int RecoveryTicks([CanBeNull] AnimationClip clip) {
-        if (clip == null) return 1;
-        return Mathf.RoundToInt(clip.length * Simulation.TickRate);
-    }
 
     private void OnDrawGizmos() {
         if (unitConfig == null) return;
