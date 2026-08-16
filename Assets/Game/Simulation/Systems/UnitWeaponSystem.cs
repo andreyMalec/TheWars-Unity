@@ -85,14 +85,27 @@ public sealed class UnitWeaponSystem : ISystem {
         if (targetPosition == Vector2.zero)
             targetPosition = unit.LastTargetPosition;
         if (config.attackType == UnitAttackType.Ranged) {
-            var direction = (targetPosition - unit.Position).normalized;
-
             var projectilePosition = UnitColliderUtility.ToWorldPoint(
                 config.projectilePosition,
                 unit.Position,
                 UnitColliderUtility.IsMirrored(unit.Direction));
 
             var projConfig = fr.FindConfig<ProjectileConfig>(config.projectileId);
+            var direction = (targetPosition - projectilePosition).normalized;
+            var velocity = Vector2.zero;
+
+            if (projConfig.type == ProjectileType.Ballistic) {
+                var targetVelocity = BallisticsUtility.ResolveTargetVelocity(fr, unit.TargetEntityId);
+                direction = BallisticsUtility.CalculateAimedBallisticDirection(
+                    projectilePosition,
+                    targetPosition,
+                    targetVelocity,
+                    projConfig.speed,
+                    projConfig.gravity,
+                    projConfig.highArc,
+                    projConfig.autoSwitchArcRoot);
+                velocity = direction * projConfig.speed;
+            }
 
             var state = new ProjectileState {
                 Id = fr.GenerateEntityId(),
@@ -103,8 +116,9 @@ public sealed class UnitWeaponSystem : ISystem {
                 Damage = config.damage,
                 Position = projectilePosition,
                 Direction = direction,
+                Velocity = velocity,
                 Speed = projConfig.speed,
-                Lifetime = 5f
+                Type = projConfig.type,
             };
 
             fr.AddProjectile(state);

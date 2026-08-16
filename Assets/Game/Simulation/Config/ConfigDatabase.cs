@@ -12,10 +12,13 @@ public struct ConfigEntry {
 [CreateAssetMenu(menuName = "Game/Config Database")]
 public sealed class ConfigDatabase : ScriptableObject {
     [SerializeField] private bool validate;
+    [SerializeField] private World world;
     [SerializeField] private ConfigEntry[] configs = Array.Empty<ConfigEntry>();
 
     private readonly Dictionary<Type, Dictionary<ConfigId, EntityConfig>> _byId = new();
     private readonly Dictionary<Type, Dictionary<Epoch, Dictionary<EntityType, EntityConfig>>> _byEpochAndType = new();
+    
+    public World World => world;
 
     private void OnEnable() {
         RebuildCache();

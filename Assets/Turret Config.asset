@@ -15,15 +15,15 @@ MonoBehaviour:
   epoch: 0
   entityType: 0
   cost: 5
-  attackRange: 3
-  attackInterval: 1
+  attackRange: 5
   damage: 10
   rotateToTarget: 1
   attackTicks:
   - type: 0
-    value: 30
+    value: 0
   - type: 1
-    value: 10
+    value: 30
   projectilePrefab: {fileID: 9172579707124366618, guid: 9466c251b2ed287418a1421cf3ae8df2, type: 3}
-  projectilePosition: {x: 0.082, y: 0.017}
+  projectilePositions:
+  - {x: 0.082, y: 0.017}
   prefab: {fileID: 9172579707124366618, guid: 8cf99a8940b77de47ac586fa161d9e20, type: 3}

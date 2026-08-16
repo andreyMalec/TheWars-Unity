@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Config Database
   m_EditorClassIdentifier: TheWars.Simulation::ConfigDatabase
   validate: 0
+  world:
+    ground: -0.213
   configs:
   - type: UnitConfig
     items:

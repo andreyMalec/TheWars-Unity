@@ -8,6 +8,7 @@ public sealed class Simulation {
     private readonly List<ISystem> _systems = new();
     private readonly CommandQueue _commandQueue = new();
 
+    public World World { get; }
     public Frame Frame { get; }
     public EventBus Events { get; }
     public SpawnQueue SpawnQueue { get; }
@@ -23,6 +24,7 @@ public sealed class Simulation {
         Frame = new Frame(1f / tickRate, configDatabase);
         SpawnQueue = new SpawnQueue();
         Events = new EventBus();
+        World = configDatabase.World;
 
         _systems.Add(new EconomySystem());
         _systems.Add(new BuildTurretSystem());

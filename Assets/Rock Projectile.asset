@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b35db469f83d4d2ab886e9485eaa5c59, type: 3}
   m_Name: Rock Projectile
   m_EditorClassIdentifier: TheWars.Simulation::ProjectileConfig
-  speed: 3
-  radius: 0.13
+  speed: 4
+  type: 2
+  gravity: 2
+  highArc: 0
+  autoSwitchArcRoot: 1
+  radius: 0.04
   prefab: {fileID: 9172579707124366618, guid: 9466c251b2ed287418a1421cf3ae8df2, type: 3}

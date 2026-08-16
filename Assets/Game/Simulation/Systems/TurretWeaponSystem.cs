@@ -1,15 +1,16 @@
-using System;
 using UnityEngine;
 
 public sealed class TurretWeaponSystem : ISystem {
+    private const float Epsilon = 0.0001f;
+
     public void Run(Simulation s, Frame fr) {
         foreach (var pair in fr.Turrets) {
             var turret = pair.Value;
             var config = fr.FindConfig<TurretConfig>(turret.ConfigId);
-            RotateToTarget(turret, config);
+            RotateToTarget(fr, turret, config);
 
             // 1. Выполнить уже начатую атаку
-            if (TryAttack(s, fr, turret, config)) continue;
+            if (TryAttack(fr, turret, config)) continue;
 
             // 2. Если сейчас готова новая атака
             if (!CanAttack(fr, turret, config)) continue;
@@ -26,9 +27,9 @@ public sealed class TurretWeaponSystem : ISystem {
         }
     }
 
-    private bool TryAttack(Simulation s, Frame fr, TurretState turret, TurretConfig config) {
+    private bool TryAttack(Frame fr, TurretState turret, TurretConfig config) {
         if (turret.ExecuteTick > 0 && fr.Tick >= turret.ExecuteTick) {
-            ExecuteAttack(s, fr, turret, config);
+            ExecuteAttack(fr, turret, config);
             turret.AttackIndex++;
             turret.ExecuteTick = 0;
             var attack = config.attackTicks[turret.AttackIndex];
@@ -69,18 +70,36 @@ public sealed class TurretWeaponSystem : ISystem {
         return true;
     }
 
-    private void RotateToTarget(TurretState turret, TurretConfig config) {
-        if (turret.LastTargetPosition == Vector2.zero) return;
-        var toTarget = turret.LastTargetPosition - turret.Position;
-        var direction = toTarget.normalized;
-        if (config.rotateToTarget)
-            turret.Rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        else
+    private void RotateToTarget(Frame fr, TurretState turret, TurretConfig config) {
+        if (!config.rotateToTarget) {
             turret.Rotation = 0f;
+            return;
+        }
+
+        if (turret.LastTargetPosition == Vector2.zero) return;
+
+        var toTarget = turret.LastTargetPosition - turret.Position;
+        if (toTarget.sqrMagnitude <= Epsilon) return;
+
+        var direction = toTarget.normalized;
+        var projectileConfig = fr.FindConfig<ProjectileConfig>(config.projectileId);
+
+        if (projectileConfig.type == ProjectileType.Ballistic) {
+            var targetVelocity = BallisticsUtility.ResolveTargetVelocity(fr, turret.TargetEntityId);
+            direction = BallisticsUtility.CalculateAimedBallisticDirection(
+                turret.Position,
+                turret.LastTargetPosition,
+                targetVelocity,
+                projectileConfig.speed,
+                projectileConfig.gravity,
+                projectileConfig.highArc,
+                projectileConfig.autoSwitchArcRoot);
+        }
+
+        turret.Rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
     }
 
     private void ExecuteAttack(
-        Simulation s,
         Frame fr,
         TurretState turret,
         TurretConfig config
@@ -88,14 +107,30 @@ public sealed class TurretWeaponSystem : ISystem {
         fr.TryGetEntityPosition(turret.TargetEntityId, out var targetPosition);
         if (targetPosition == Vector2.zero)
             targetPosition = turret.LastTargetPosition;
-        var direction = (targetPosition - turret.Position).normalized;
 
+        var rotated = Vector3.RotateTowards(config.projectilePositions[turret.AttackIndex], turret.Position,
+            turret.Rotation * Mathf.Deg2Rad, 0f);
         var projectilePosition = UnitColliderUtility.ToWorldPoint(
-            config.projectilePositions[turret.AttackIndex],
+            rotated,
             turret.Position,
             turret.Team == Team.Right);
 
         var projConfig = fr.FindConfig<ProjectileConfig>(config.projectileId);
+        var direction = (targetPosition - projectilePosition).normalized;
+        var velocity = Vector2.zero;
+
+        if (projConfig.type == ProjectileType.Ballistic) {
+            var targetVelocity = BallisticsUtility.ResolveTargetVelocity(fr, turret.TargetEntityId);
+            direction = BallisticsUtility.CalculateAimedBallisticDirection(
+                projectilePosition,
+                targetPosition,
+                targetVelocity,
+                projConfig.speed,
+                projConfig.gravity,
+                projConfig.highArc,
+                projConfig.autoSwitchArcRoot);
+            velocity = direction * projConfig.speed;
+        }
 
         var state = new ProjectileState {
             Id = fr.GenerateEntityId(),
@@ -106,8 +141,9 @@ public sealed class TurretWeaponSystem : ISystem {
             Damage = config.damage,
             Position = projectilePosition,
             Direction = direction,
+            Velocity = velocity,
             Speed = projConfig.speed,
-            Lifetime = 5f
+            Type = projConfig.type,
         };
 
         fr.AddProjectile(state);

@@ -27,6 +27,6 @@ MonoBehaviour:
     value: 38
   projectilePrefab: {fileID: 9172579707124366618, guid: 9466c251b2ed287418a1421cf3ae8df2, type: 3}
   projectilePositions:
-  - {x: 0.1909, y: 0.0276}
-  - {x: 0.1909, y: 0.0811}
+  - {x: 0.1387, y: -0.0212}
+  - {x: 0.1401, y: 0.0329}
   prefab: {fileID: 9172579707124366618, guid: a33fa6020e94c334e873be142eea1d27, type: 3}

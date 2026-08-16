@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public sealed class ProjectileSystem : ISystem {
+    private const float Epsilon = 0.0001f;
+
     public void Run(Simulation s, Frame fr) {
         var dt = fr.DeltaTime;
 
@@ -9,6 +11,10 @@ public sealed class ProjectileSystem : ISystem {
 
             projectile.Lifetime -= dt;
             if (projectile.Lifetime <= 0f) {
+                s.ProjectileRemovalRequests.Enqueue(projectile.Id);
+                continue;
+            }
+            if (projectile.Position.y <= s.World.ground) {
                 s.ProjectileRemovalRequests.Enqueue(projectile.Id);
                 continue;
             }
@@ -34,7 +40,19 @@ public sealed class ProjectileSystem : ISystem {
     }
 
     private void MoveBallistic(Frame fr, ProjectileState projectile, float dt) {
+        var config = fr.FindConfig<ProjectileConfig>(projectile.ConfigId);
+        if (projectile.Velocity == Vector2.zero && projectile.Direction.sqrMagnitude > Epsilon) {
+            projectile.Velocity = projectile.Direction * projectile.Speed;
+        }
+
+        projectile.Velocity += Vector2.down * (config.gravity * dt);
+        projectile.Position += projectile.Velocity * dt;
+        if (projectile.Velocity.sqrMagnitude > Epsilon) {
+            projectile.Direction = projectile.Velocity.normalized;
+            projectile.Speed = projectile.Velocity.magnitude;
+        }
     }
+
 
     private void MoveHoming(Frame fr, ProjectileState projectile, float dt) {
         var dir = projectile.Direction;
