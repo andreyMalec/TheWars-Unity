@@ -43,15 +43,14 @@ public class UnitConfigBaker : MonoBehaviour {
 
         unitConfig.projectilePosition = _ranged ? projectilePosition.localPosition : Vector2.zero;
 
-        var view = GetComponent<UnitView>();
-        unitConfig.attackTicks.standingMelee = view.animationConfig.StandingMeleeAttack.AttackTicks();
-        unitConfig.attackTicks.standingRanged = view.animationConfig.StandingRangedAttack.AttackTicks();
-        unitConfig.attackTicks.walkingRanged = view.animationConfig.WalkingRangedAttack.AttackTicks();
+        var animator = GetComponent<UnitAnimator>();
+        unitConfig.attackTicks.standingMelee = animator.animationConfig.StandingMeleeAttack.AttackTicks();
+        unitConfig.attackTicks.standingRanged = animator.animationConfig.StandingRangedAttack.AttackTicks();
+        unitConfig.attackTicks.walkingRanged = animator.animationConfig.WalkingRangedAttack.AttackTicks();
 
         var renderer = GetComponentInChildren<SpriteRenderer>();
         unitConfig.movementCenter = renderer.sprite.pivot / renderer.sprite.pixelsPerUnit * 0.8f;
     }
-
 
     private void OnDrawGizmos() {
         if (unitConfig == null) return;

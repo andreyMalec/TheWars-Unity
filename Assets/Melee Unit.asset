@@ -34,13 +34,14 @@ MonoBehaviour:
   colliderBox:
   - {x: -0.08231217, y: -0.15811801}
   - {x: 0.049365364, y: 0.18387268}
-  movementCenter: {x: 0.103999995, y: 0.136}
+  movementCenter: {x: 0.112, y: 0.136}
   attackTicks:
-    executeStandingMelee: 48
-    recoveryStandingMelee: 14
-    executeStandingRanged: 1
-    recoveryStandingRanged: 0
-    executeWalkingRanged: 1
-    recoveryWalkingRanged: 0
+    standingMelee:
+    - type: 0
+      value: 48
+    - type: 1
+      value: 14
+    standingRanged: []
+    walkingRanged: []
   projectilePosition: {x: 0, y: 0}
   prefab: {fileID: 9172579707124366618, guid: f5502d401d8fc7a46af75e1a304cc35b, type: 3}
